@@ -1,0 +1,14 @@
+﻿create table clients
+(
+	id Serial not null,
+	Surname text not null,
+	Name text not null,
+	Patronymic text not null,
+	PassportSeriesAndNumber text not null,
+	IdNumber text not null,
+	PhoneNumber text not null,
+	Email text not null
+);
+
+ALTER TABLE clients
+ADD COLUMN IsApproved boolean;

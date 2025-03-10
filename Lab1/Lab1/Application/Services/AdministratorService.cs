@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lab1.Domain.Services
+namespace Lab1.Application.Services
 {
-    internal class Installment
+    internal class AdministratorService
     {
     }
 }

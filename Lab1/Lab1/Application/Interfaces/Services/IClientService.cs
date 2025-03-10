@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lab1.Domain.Services
+namespace Lab1.Application.Interfaces.Services
 {
-    internal class Transfer
+    internal interface IClientService
     {
-        
+        public void Register();
     }
 }
