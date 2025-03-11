@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Lab1.Application.Interfaces.Repositories;
+using Lab1.Application.Interfaces.Services;
 using Lab1.Domain.Users;
 
 namespace Lab1.Application.Services
 {
-    internal class ClientService(IClientRepository clientRepository)
+    internal class ClientService(IClientRepository clientRepository) : IClientService
     {
         public void Register(
             string surname,
@@ -20,20 +21,33 @@ namespace Lab1.Application.Services
             string phoneNumber,
             string email)
         {
-            Client client = new Client();
+            Client client = new Client()
+            {
+                Surname = surname,
+                Name = name,
+                Patronymic = patronymic,
+                PassportSeriesAndNumber = passportSeriesAndNumber,
+                IdNumber = idNumber,
+                PhoneNumber = phoneNumber,
+                Email = email
+            };
 
-            client.Surname = surname;
-            client.Name = name;
-            client.Patronymic = patronymic;
-            client.PassportSeriesAndNumber = passportSeriesAndNumber;
-            client.IdNumber = idNumber;
-            client.PhoneNumber = phoneNumber;
-            client.Email = email;
+            var creationTask = clientRepository.CreateAsync(client, CancellationToken.None);
+            Task.WaitAny(creationTask);
+        }
 
-            // create some accounts for him
-            // add some banks for him
+        public List<Client> GetAllNotApprovedClients()
+        {
+            var gettingTask = clientRepository.ReadAllNotApprovedAsync(CancellationToken.None);
+            Task.WaitAny(gettingTask);
 
-            clientRepository.CreateAsync(client, CancellationToken.None);
+            return gettingTask.Result;
+        }
+
+        public void DeleteClient(Client client)
+        {
+            var deletingTask = clientRepository.DeleteAsync(client, CancellationToken.None);
+            Task.WaitAny(deletingTask);
         }
     }
 }

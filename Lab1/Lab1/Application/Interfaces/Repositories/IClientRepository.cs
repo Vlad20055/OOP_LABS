@@ -9,6 +9,6 @@ namespace Lab1.Application.Interfaces.Repositories
 {
     internal interface IClientRepository : IRepository<Client>
     {
-        
+        public Task<List<Client>> ReadAllNotApprovedAsync(CancellationToken cancellationToken);
     }
 }
