@@ -4,6 +4,6 @@ namespace Lab1.Domain.Repositories
 {
     internal interface IClientRepository : IUserRepository<Client>
     {
-        
+        public Task CreateAccountAsync(Account account, CancellationToken cancellationToken);
     }
 }

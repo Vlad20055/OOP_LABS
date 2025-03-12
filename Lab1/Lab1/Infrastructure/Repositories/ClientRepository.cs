@@ -1,10 +1,11 @@
-﻿using Lab1.Domain.Repositories;
+﻿using Lab1.Domain;
+using Lab1.Domain.Repositories;
 using Lab1.Domain.Users;
 using Lab1.Infrastructure.Options;
 using Npgsql;
 
 
-namespace Lab1.Infrastructure
+namespace Lab1.Infrastructure.Repositories
 {
     internal class ClientRepository : IClientRepository
     {
@@ -30,7 +31,7 @@ namespace Lab1.Infrastructure
             command.Parameters.AddWithValue("@IdNumber", client.IdNumber);
             command.Parameters.AddWithValue("@PhoneNumber", client.PhoneNumber);
             command.Parameters.AddWithValue("@Email", client.Email);
-            command.Parameters.AddWithValue("@IsApproved", false);
+            command.Parameters.AddWithValue("@IsApproved", client.IsApproved);
             command.Parameters.AddWithValue("@Login", client.Login);
             command.Parameters.AddWithValue("@Password", client.Password);
 
@@ -70,7 +71,7 @@ namespace Lab1.Infrastructure
 
             await using var reader = await command.ExecuteReaderAsync(cancellationToken);
 
-            var client = new Client();
+            var client = new Client(new ClientRepository());
 
             if (!await reader.ReadAsync(cancellationToken)) throw new NpgsqlException();
 
@@ -83,9 +84,39 @@ namespace Lab1.Infrastructure
             client.Email = (string)reader["Email"];
             client.Login = (string)reader["Login"];
             client.Password = (string)reader["Password"];
+            client.IsApproved = (bool)reader["IsApproved"];
             client.Role = UserRole.Clilent;
 
             return client;
         }
+
+        public async Task CreateAccountAsync(Account account, CancellationToken cancellationToken)
+        {
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            const string SQLquery = """
+                INSERT INTO accounts
+                (Amount, IsActive)
+                VALUES 
+                (@Amount, @IsActive)
+                RETURNING IdNumber
+                """;
+
+            var command = new NpgsqlCommand(SQLquery, connection);
+
+            command.Parameters.AddWithValue("@Amount", account.Amount);
+            command.Parameters.AddWithValue("@IsActive", account.IsActive);
+
+            var result = await command.ExecuteScalarAsync(cancellationToken);
+
+            if (result == null)
+            {
+                throw new NpgsqlException("Failed to create account. No ID was returned.");
+            }
+
+            account.IdNumber = (int)result;
+        }
+    
     }
 }

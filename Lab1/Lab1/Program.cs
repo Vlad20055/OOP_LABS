@@ -1,6 +1,7 @@
 ﻿using Lab1.Application.Services;
+using Lab1.Domain;
 using Lab1.Domain.Users;
-using Lab1.Infrastructure;
+using Lab1.Infrastructure.Repositories;
 
 Console.WriteLine("Hello, World!");
 
@@ -29,6 +30,11 @@ Manager managerEkaterina = managerService.AddManager(
     "Katia2006",
     "1234"
     );
+
+managerEkaterina.ApproveClient(clientVladislav);
+
+Account account = clientVladislav.AddAccount(new Bank()) ?? new Account();
+Console.WriteLine(account.IdNumber);
 
 //managerService.DeleteManager(managerEkaterina);
 //clientService.DeleteClient(clientVladislav);

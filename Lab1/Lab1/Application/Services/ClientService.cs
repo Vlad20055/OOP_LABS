@@ -31,7 +31,7 @@ namespace Lab1.Application.Services
             }
             catch
             {
-                Client client = new Client()
+                Client client = new Client(clientRepository)
                 {
                     Surname = surname,
                     Name = name,

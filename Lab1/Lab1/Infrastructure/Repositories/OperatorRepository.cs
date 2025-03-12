@@ -1,6 +1,4 @@
-﻿
-
-namespace Lab1.Infrastructure
+﻿namespace Lab1.Infrastructure.Repositories
 {
     internal class OperatorRepository
     {

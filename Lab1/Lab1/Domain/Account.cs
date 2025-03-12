@@ -1,12 +1,12 @@
-﻿
+﻿using Lab1.Domain.Repositories;
 
 namespace Lab1.Domain
 {
-    internal class Account
+    internal class Account()
     {
-        public string IdNumber { get; set; }
+        public int? IdNumber { get; set; }
+        public Bank Bank { get; set; }
         public decimal Amount { get; set; }
         public bool IsActive { get; set; }
-
     }
 }

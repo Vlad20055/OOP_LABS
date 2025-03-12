@@ -3,11 +3,11 @@ using Lab1.Infrastructure.Options;
 using Lab1.Domain.Users;
 using Lab1.Domain.Repositories;
 
-namespace Lab1.Infrastructure
+namespace Lab1.Infrastructure.Repositories
 {
     internal class ManagerRepository : IManagerRepository
     {
-        public async Task CreateAsync(Manager manager, CancellationToken cancellationToken) 
+        public async Task CreateAsync(Manager manager, CancellationToken cancellationToken)
         {
             await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
             await connection.OpenAsync(cancellationToken);
@@ -21,7 +21,7 @@ namespace Lab1.Infrastructure
                 """;
 
             var command = new NpgsqlCommand(SQLquery, connection);
-            
+
             command.Parameters.AddWithValue("@IdNumber", manager.IdNumber);
             command.Parameters.AddWithValue("@Name", manager.Name);
             command.Parameters.AddWithValue("@Login", manager.Login);
@@ -48,7 +48,7 @@ namespace Lab1.Infrastructure
 
             var manager = new Manager(this);
 
-            if (!(await reader.ReadAsync(cancellationToken))) throw new NpgsqlException();
+            if (!await reader.ReadAsync(cancellationToken)) throw new NpgsqlException();
 
             manager.IdNumber = (string)reader["IdNumber"];
             manager.Name = (string)reader["Name"];
@@ -96,7 +96,7 @@ namespace Lab1.Infrastructure
 
             while (await reader.ReadAsync(cancellationToken))
             {
-                clients.Add(new Client
+                clients.Add(new Client(new ClientRepository())
                 {
                     Surname = (string)reader["Surname"],
                     Name = (string)reader["Name"],
