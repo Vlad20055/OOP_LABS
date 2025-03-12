@@ -11,41 +11,28 @@ Console.WriteLine(user.Role);
 ClientService clientService = new ClientService(new ClientRepository());
 ManagerService managerService = new ManagerService(new ManagerRepository());
 
-clientService.Register(
+Client clientVladislav = clientService.Register(
     "Maksimenkov",
     "Vladislav",
     "Aleksandrovich",
     "Passport",
     "ID1",
     "+375333955034",
-    "maksimenkovvlad111@mail.ru"
+    "maksimenkovvlad111@mail.ru",
+    "Vlad20055",
+    "1234"
     );
 
-managerService.AddManager(
+Manager managerEkaterina = managerService.AddManager(
     "ID1",
-    "Anna"
+    "Ekaterina",
+    "Katia2006",
+    "1234"
     );
 
+//managerService.DeleteManager(managerEkaterina);
+//clientService.DeleteClient(clientVladislav);
 
 
-List<Client> NotApprovedClients = clientService.GetAllNotApprovedClients();
 
-foreach (Client client in NotApprovedClients)
-{
-    managerService.ApproveClient(client);
-}
-
-NotApprovedClients = clientService.GetAllNotApprovedClients();
-
-int cnt = 1;
-foreach(Client client in NotApprovedClients)
-{
-    Console.WriteLine($"{cnt} {client.Name}");
-    ++cnt;
-}
-
-foreach (Client client in NotApprovedClients)
-{
-    clientService.DeleteClient(client);
-}
 

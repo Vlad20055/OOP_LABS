@@ -1,47 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Lab1.Application.Interfaces.Repositories;
-using Lab1.Application.Interfaces.Services;
+﻿using Lab1.Application.Interfaces.Services;
+using Lab1.Domain.Repositories;
 using Lab1.Domain.Users;
+using Npgsql;
 
 namespace Lab1.Application.Services
 {
     internal class ClientService(IClientRepository clientRepository) : IClientService
     {
-        public void Register(
+        public Client Register(
             string surname,
             string name,
             string patronymic,
             string passportSeriesAndNumber,
             string idNumber,
             string phoneNumber,
-            string email)
+            string email,
+            string login,
+            string password
+            )
         {
-            Client client = new Client()
+            try 
             {
-                Surname = surname,
-                Name = name,
-                Patronymic = patronymic,
-                PassportSeriesAndNumber = passportSeriesAndNumber,
-                IdNumber = idNumber,
-                PhoneNumber = phoneNumber,
-                Email = email
-            };
+                var readingTask = clientRepository.ReadAsync(login, CancellationToken.None);
+                Task.WaitAny(readingTask);
+                Client client = readingTask.Result;
 
-            var creationTask = clientRepository.CreateAsync(client, CancellationToken.None);
-            Task.WaitAny(creationTask);
-        }
+                Console.WriteLine("\nREGISTRATION ERROR!\nClient already exists!\n");
 
-        public List<Client> GetAllNotApprovedClients()
-        {
-            var gettingTask = clientRepository.ReadAllNotApprovedAsync(CancellationToken.None);
-            Task.WaitAny(gettingTask);
+                return client;
+            }
+            catch
+            {
+                Client client = new Client()
+                {
+                    Surname = surname,
+                    Name = name,
+                    Patronymic = patronymic,
+                    PassportSeriesAndNumber = passportSeriesAndNumber,
+                    IdNumber = idNumber,
+                    PhoneNumber = phoneNumber,
+                    Email = email,
+                    Login = login,
+                    Password = password,
+                    Role = UserRole.Clilent
+                };
 
-            return gettingTask.Result;
+                var creationTask = clientRepository.CreateAsync(client, CancellationToken.None);
+                Task.WaitAny(creationTask);
+
+                return client;
+            }
         }
 
         public void DeleteClient(Client client)

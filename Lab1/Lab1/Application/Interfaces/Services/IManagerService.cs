@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Lab1.Domain.Users;
+﻿using Lab1.Domain.Users;
 
 namespace Lab1.Application.Interfaces.Services
 {
     internal interface IManagerService
     {
-        public void AddManager(
+        public Manager AddManager(
             string idNumber,
-            string name);
+            string name,
+            string login,
+            string password
+            );
 
         public void DeleteManager(Manager manager);
-
-        public void ApproveClient(Client client);
     }
 }

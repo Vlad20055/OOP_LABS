@@ -11,4 +11,18 @@
 );
 
 ALTER TABLE clients
+ADD COLUMN Login text,
+ADD COLUMN Password text,
 ADD COLUMN IsApproved boolean;
+
+
+create table managers
+(
+	id Serial not null,
+	IdNumber text not null,
+	Name text not null
+);
+
+alter table managers
+add column Login text,
+add column password text;

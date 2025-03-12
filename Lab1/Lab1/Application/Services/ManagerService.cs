@@ -1,40 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Lab1.Application.Interfaces.Repositories;
-using Lab1.Application.Interfaces.Services;
+﻿using Lab1.Application.Interfaces.Services;
+using Lab1.Domain.Repositories;
 using Lab1.Domain.Users;
 using Lab1.Infrastructure;
+using Npgsql;
 
 namespace Lab1.Application.Services
 {
     internal class ManagerService(IManagerRepository managerRepository) : IManagerService
     {
-        public void AddManager(
+        public Manager AddManager(
             string idNumber,
-            string name)
+            string name,
+            string login,
+            string password
+            )
         {
-            Manager manager = new Manager() {
-                IdNumber = idNumber,
-                Name = name };
+            try
+            {
+                var readingTask = managerRepository.ReadAsync(login, CancellationToken.None);
+                Task.WaitAny(readingTask);
+                Manager manager = readingTask.Result;
 
-            var creationTask = managerRepository.CreateAsync(manager, CancellationToken.None);
-            Task.WaitAny(creationTask);
+                Console.WriteLine("\nREGISTRATION ERROR!\nManager already exists!\n");
+
+                return manager;
+            }
+            catch
+            {
+                Manager manager = new Manager(managerRepository)
+                {
+                    IdNumber = idNumber,
+                    Name = name,
+                    Login = login,
+                    Password = password,
+                    Role = UserRole.Manager
+                };
+
+                var creationTask = managerRepository.CreateAsync(manager, CancellationToken.None);
+                Task.WaitAny(creationTask);
+
+                return manager;
+            }
         }
 
         public void DeleteManager(Manager manager)
         {
             var deletingTask = managerRepository.DeleteAsync(manager, CancellationToken.None);
             Task.WaitAny(deletingTask);
-        }
-
-        public void ApproveClient(Client client)
-        {
-            var approvalTask = managerRepository.UpdateClientAsync(client, CancellationToken.None);
-            Task.WaitAny(approvalTask);
         }
     }
 }

@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Lab1.Domain.Repositories;
 
 namespace Lab1.Domain.Users
 {
-    internal class Manager : User
+    internal class Manager(IManagerRepository managerRepository) : User
     {
         public string IdNumber { get; set; }
         public string Name { get; set; }
 
-        // need to add Login and Password from User to database
+        public void ApproveClient(Client client)
+        {
+            var approvalTask = managerRepository.ApproveClientAsync(client, CancellationToken.None);
+            Task.WaitAny(approvalTask);
+        }
     }
 }
