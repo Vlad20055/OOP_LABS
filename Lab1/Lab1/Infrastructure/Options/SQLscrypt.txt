@@ -7,33 +7,21 @@
 	PassportSeriesAndNumber text not null,
 	IdNumber text not null,
 	PhoneNumber text not null,
-	Email text not null
+	Email text not null,
+	Login text not null,
+	Password text not null,
+	IsApproved boolean not null
 );
-
-ALTER TABLE clients
-ADD COLUMN Login text,
-ADD COLUMN Password text,
-ADD COLUMN IsApproved boolean;
-
-
-
-
 
 
 create table managers
 (
 	id Serial not null,
 	IdNumber text not null,
-	Name text not null
+	Name text not null,
+	Login text not null,
+	Password text not null
 );
-
-alter table managers
-add column Login text,
-add column password text;
-
-
-
-
 
 
 create table accounts
@@ -44,10 +32,6 @@ create table accounts
 );
 
 
-
-
-
-
 create table banks
 (
 	Id Serial not null,
@@ -55,17 +39,15 @@ create table banks
 );
 
 
+create table client_account_records
+(
+	Login text not null,
+	IdNumber int not null
+);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+create table account_bank_records
+(
+	IdNumber int not null,
+	Name text not null
+);

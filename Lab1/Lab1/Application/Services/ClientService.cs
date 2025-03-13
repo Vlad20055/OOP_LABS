@@ -52,6 +52,12 @@ namespace Lab1.Application.Services
             }
         }
 
+        public Client? ReadClient(string login)
+        {
+            var readingTask = clientRepository.ReadAsync(login, CancellationToken.None);
+            return readingTask.Result;
+        }
+
         public void DeleteClient(Client client)
         {
             var deletingTask = clientRepository.DeleteAsync(client, CancellationToken.None);

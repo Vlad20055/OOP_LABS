@@ -37,8 +37,18 @@ Bank Belarusbank = bankService.Register("Belarusbank");
 
 
 managerEkaterina.ApproveClient(clientVladislav);
+
 Account account = clientVladislav.AddAccount(Belarusbank) ?? new Account();
-Console.WriteLine(account.IdNumber);
+
+clientVladislav = clientService.ReadClient("Vlad20055") ?? throw new Exception("No such Client");
+
+foreach (var acc in clientVladislav.Accounts)
+{
+    Console.WriteLine(acc.IdNumber);
+}
+
+
+
 
 
 //bankService.Unregister(Belarusbank);

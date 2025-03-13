@@ -16,6 +16,8 @@ namespace Lab1.Application.Interfaces.Services
             string password
             );
 
+        public Client? ReadClient(string login);
+
         public void DeleteClient(Client client);
     }
 }

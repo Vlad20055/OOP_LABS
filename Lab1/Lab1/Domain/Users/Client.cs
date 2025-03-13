@@ -1,4 +1,5 @@
-﻿using Lab1.Domain.Repositories;
+﻿using System.Numerics;
+using Lab1.Domain.Repositories;
 
 namespace Lab1.Domain.Users
 {
@@ -12,8 +13,6 @@ namespace Lab1.Domain.Users
         public string? PhoneNumber { get; set; }
         public string? Email { get; set; }
         public bool IsApproved { get; set; } = false;
-
-        public List<Bank> Banks { get; set; } = new List<Bank>();
         public List<Account> Accounts { get; set; } = new List<Account>();
 
 
@@ -34,12 +33,31 @@ namespace Lab1.Domain.Users
             };
 
             var creationTask = clientRepository.CreateAccountAsync(account, CancellationToken.None);
+            Task.WaitAny(creationTask);
+            var clientAccountTask = clientRepository.AddClientAccountRecordAsync(this, account, CancellationToken.None);
+            Task.WaitAny(clientAccountTask);
+            var accountBankTask = clientRepository.AddAccountBankRecordAsync(account, bank, CancellationToken.None);
+            Task.WaitAny(accountBankTask);
 
-            if (!Banks.Contains(bank)) Banks.Add(bank);
             Accounts.Add(account);
 
-            Task.WaitAny(creationTask);
             return account;
+        }
+
+        public void DeleteAccount(Account account)
+        {
+            if (!IsApproved)
+            {
+                Console.WriteLine("\nERROR!\nClient is not approved\n");
+                return;
+            }
+
+            var deletingAccountBankTask = clientRepository.RemoveAccountBankRecordAsync(account, account.Bank, CancellationToken.None);
+            Task.WaitAny(deletingAccountBankTask);
+            var deletingClientAccountTask = clientRepository.RemoveClientAccountRecordAsync(this, account, CancellationToken.None);
+            Task.WaitAny(deletingClientAccountTask);
+            var deletingAccountTask = clientRepository.DeleteAccountAsync(account, CancellationToken.None);
+            Task.WaitAny(deletingAccountTask);
         }
     }
 }
