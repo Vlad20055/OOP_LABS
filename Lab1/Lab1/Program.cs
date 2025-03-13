@@ -3,6 +3,8 @@ using Lab1.Domain;
 using Lab1.Domain.Users;
 using Lab1.Infrastructure.Repositories;
 
+
+
 Console.WriteLine("Hello, World!");
 
 User user = new User();
@@ -23,7 +25,7 @@ Client clientVladislav = clientService.Register(
     "maksimenkovvlad111@mail.ru",
     "Vlad20055",
     "1234"
-    );
+    ) ?? throw new Exception();
 
 Manager managerEkaterina = managerService.AddManager(
     "ID1",
@@ -34,11 +36,13 @@ Manager managerEkaterina = managerService.AddManager(
 
 Bank Belarusbank = bankService.Register("Belarusbank");
 
-
-
-managerEkaterina.ApproveClient(clientVladislav);
+await managerEkaterina.ApproveClient(clientVladislav);
 
 Account account = clientVladislav.AddAccount(Belarusbank) ?? new Account();
+
+
+
+clientVladislav.DeleteAccount(clientVladislav.Accounts[2]);
 
 clientVladislav = clientService.ReadClient("Vlad20055") ?? throw new Exception("No such Client");
 
@@ -47,13 +51,10 @@ foreach (var acc in clientVladislav.Accounts)
     Console.WriteLine(acc.IdNumber);
 }
 
-
-
-
-
 //bankService.Unregister(Belarusbank);
 //managerService.DeleteManager(managerEkaterina);
 //clientService.DeleteClient(clientVladislav);
+
 
 
 

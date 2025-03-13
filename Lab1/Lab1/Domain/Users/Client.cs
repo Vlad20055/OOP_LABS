@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using Lab1.Domain.Repositories;
+﻿using Lab1.Domain.Repositories;
 
 namespace Lab1.Domain.Users
 {
@@ -33,12 +32,12 @@ namespace Lab1.Domain.Users
             };
 
             var creationTask = clientRepository.CreateAccountAsync(account, CancellationToken.None);
-            Task.WaitAny(creationTask);
+            creationTask.Wait();
             var clientAccountTask = clientRepository.AddClientAccountRecordAsync(this, account, CancellationToken.None);
-            Task.WaitAny(clientAccountTask);
             var accountBankTask = clientRepository.AddAccountBankRecordAsync(account, bank, CancellationToken.None);
-            Task.WaitAny(accountBankTask);
-
+            
+            Task.WaitAll(clientAccountTask,  accountBankTask);
+            
             Accounts.Add(account);
 
             return account;
@@ -53,11 +52,13 @@ namespace Lab1.Domain.Users
             }
 
             var deletingAccountBankTask = clientRepository.RemoveAccountBankRecordAsync(account, account.Bank, CancellationToken.None);
-            Task.WaitAny(deletingAccountBankTask);
+            deletingAccountBankTask.Wait();
             var deletingClientAccountTask = clientRepository.RemoveClientAccountRecordAsync(this, account, CancellationToken.None);
-            Task.WaitAny(deletingClientAccountTask);
+            deletingClientAccountTask.Wait();
             var deletingAccountTask = clientRepository.DeleteAccountAsync(account, CancellationToken.None);
-            Task.WaitAny(deletingAccountTask);
+            deletingAccountTask.Wait();
+
+            Accounts.Remove(account);
         }
     }
 }

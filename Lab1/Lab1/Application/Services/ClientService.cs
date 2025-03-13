@@ -1,7 +1,6 @@
 ﻿using Lab1.Application.Interfaces.Services;
 using Lab1.Domain.Repositories;
 using Lab1.Domain.Users;
-using Npgsql;
 
 namespace Lab1.Application.Services
 {
@@ -22,8 +21,8 @@ namespace Lab1.Application.Services
             try 
             {
                 var readingTask = clientRepository.ReadAsync(login, CancellationToken.None);
-                Task.WaitAny(readingTask);
-                Client client = readingTask.Result;
+                readingTask.Wait();
+                Client client = readingTask.Result ?? throw new Exception();
 
                 Console.WriteLine("\nREGISTRATION ERROR!\nClient already exists!\n");
 
@@ -46,7 +45,7 @@ namespace Lab1.Application.Services
                 };
 
                 var creationTask = clientRepository.CreateAsync(client, CancellationToken.None);
-                Task.WaitAny(creationTask);
+                creationTask.Wait();
 
                 return client;
             }
@@ -55,13 +54,19 @@ namespace Lab1.Application.Services
         public Client? ReadClient(string login)
         {
             var readingTask = clientRepository.ReadAsync(login, CancellationToken.None);
+            readingTask.Wait();
             return readingTask.Result;
         }
 
         public void DeleteClient(Client client)
         {
+            foreach (var acc in client.Accounts)
+            {
+                client.DeleteAccount(acc);
+            }
+
             var deletingTask = clientRepository.DeleteAsync(client, CancellationToken.None);
-            Task.WaitAny(deletingTask);
+            deletingTask.Wait();
         }
     }
 }

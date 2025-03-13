@@ -7,10 +7,10 @@ namespace Lab1.Domain.Users
         public string IdNumber { get; set; }
         public string Name { get; set; }
 
-        public void ApproveClient(Client client)
+        public async Task ApproveClient(Client client)
         {
-            var approvalTask = managerRepository.ApproveClientAsync(client, CancellationToken.None);
-            Task.WaitAny(approvalTask);
+            await managerRepository.ApproveClientAsync(client, CancellationToken.None);
+            client.IsApproved = true;
         }
     }
 }

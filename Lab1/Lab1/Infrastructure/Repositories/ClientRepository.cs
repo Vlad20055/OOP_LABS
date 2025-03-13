@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Lab1.Domain;
+﻿using Lab1.Domain;
 using Lab1.Domain.Repositories;
 using Lab1.Domain.Users;
 using Lab1.Infrastructure.Options;
@@ -249,7 +248,5 @@ namespace Lab1.Infrastructure.Repositories
 
             await command.ExecuteNonQueryAsync(cancellationToken);
         }
-
-        
     }
 }

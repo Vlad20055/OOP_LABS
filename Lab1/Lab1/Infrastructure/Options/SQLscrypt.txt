@@ -51,3 +51,14 @@ create table account_bank_records
 	IdNumber int not null,
 	Name text not null
 );
+
+
+
+// DANGER ZONE //
+
+drop table clients;
+drop table managers;
+drop table accounts;
+drop table banks;
+drop table client_account_records;
+drop table account_bank_records;
