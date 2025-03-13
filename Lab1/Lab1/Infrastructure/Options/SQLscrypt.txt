@@ -16,6 +16,10 @@ ADD COLUMN Password text,
 ADD COLUMN IsApproved boolean;
 
 
+
+
+
+
 create table managers
 (
 	id Serial not null,
@@ -26,3 +30,42 @@ create table managers
 alter table managers
 add column Login text,
 add column password text;
+
+
+
+
+
+
+create table accounts
+(
+	IdNumber Serial not null,
+	Amount decimal not null,
+	IsActive boolean not null
+);
+
+
+
+
+
+
+create table banks
+(
+	Id Serial not null,
+	Name text not null
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -2,7 +2,7 @@
 
 namespace Lab1.Domain.Repositories
 {
-    internal interface IClientRepository : IUserRepository<Client>
+    internal interface IClientRepository : IRepository<Client>
     {
         public Task CreateAccountAsync(Account account, CancellationToken cancellationToken);
     }

@@ -55,7 +55,7 @@ namespace Lab1.Infrastructure.Repositories
             await command.ExecuteNonQueryAsync(cancellationToken);
         }
 
-        public async Task<Client> ReadAsync(string login, CancellationToken cancellationToken)
+        public async Task<Client?> ReadAsync(string login, CancellationToken cancellationToken)
         {
             await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
             await connection.OpenAsync(cancellationToken);

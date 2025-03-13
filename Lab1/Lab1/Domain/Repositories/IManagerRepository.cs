@@ -2,7 +2,7 @@
 
 namespace Lab1.Domain.Repositories
 {
-    internal interface IManagerRepository : IUserRepository<Manager>
+    internal interface IManagerRepository : IRepository<Manager>
     {
         public Task<List<Client>> ReadAllNotApprovedClientsAsync(CancellationToken cancellationToken);
         public Task ApproveClientAsync(Client client, CancellationToken cancellationToken);

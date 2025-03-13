@@ -11,6 +11,7 @@ Console.WriteLine(user.Role);
 
 ClientService clientService = new ClientService(new ClientRepository());
 ManagerService managerService = new ManagerService(new ManagerRepository());
+BankService bankService = new BankService(new BankRepository());
 
 Client clientVladislav = clientService.Register(
     "Maksimenkov",
@@ -31,11 +32,16 @@ Manager managerEkaterina = managerService.AddManager(
     "1234"
     );
 
-managerEkaterina.ApproveClient(clientVladislav);
+Bank Belarusbank = bankService.Register("Belarusbank");
 
-Account account = clientVladislav.AddAccount(new Bank()) ?? new Account();
+
+
+managerEkaterina.ApproveClient(clientVladislav);
+Account account = clientVladislav.AddAccount(Belarusbank) ?? new Account();
 Console.WriteLine(account.IdNumber);
 
+
+//bankService.Unregister(Belarusbank);
 //managerService.DeleteManager(managerEkaterina);
 //clientService.DeleteClient(clientVladislav);
 

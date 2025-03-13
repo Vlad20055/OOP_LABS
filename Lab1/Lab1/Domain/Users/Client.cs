@@ -1,7 +1,4 @@
-﻿
-
-using Lab1.Domain.Repositories;
-using Lab1.Infrastructure.Repositories;
+﻿using Lab1.Domain.Repositories;
 
 namespace Lab1.Domain.Users
 {
@@ -25,7 +22,6 @@ namespace Lab1.Domain.Users
             if (!IsApproved)
             {
                 Console.WriteLine("\nERROR!\nClient is not approved\n");
-
                 return null;
             }
 
@@ -33,12 +29,16 @@ namespace Lab1.Domain.Users
             {
                 Bank = bank,
                 Amount = 0,
-                IsActive = true
+                IsActive = true,
+                Client = this
             };
 
             var creationTask = clientRepository.CreateAccountAsync(account, CancellationToken.None);
-            Task.WaitAny(creationTask);
 
+            if (!Banks.Contains(bank)) Banks.Add(bank);
+            Accounts.Add(account);
+
+            Task.WaitAny(creationTask);
             return account;
         }
     }
