@@ -28,7 +28,7 @@ namespace Lab1.Application.Services
             return bank;
         }
 
-        public void Unregister(Bank bank)
+        public void Unregister(Bank bank) // Doesn't work correctly!
         {
             var deletingTask = bankRepository.DeleteAsync(bank, CancellationToken.None);
             Task.WaitAny(deletingTask);

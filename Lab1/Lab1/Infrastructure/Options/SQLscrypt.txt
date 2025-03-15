@@ -53,6 +53,24 @@ create table account_bank_records
 );
 
 
+create table credits
+(
+	IdNumber Serial not null,
+	Id int not null,
+	IsApproved boolean not null,
+	CreditPeriod int not null,
+	Persent decimal not null,
+	Rest decimal not null
+);
+
+
+create table client_credit_records
+(
+	Login text not null,
+	IdNumber int not null
+);
+
+
 
 // DANGER ZONE //
 
@@ -62,3 +80,5 @@ drop table accounts;
 drop table banks;
 drop table client_account_records;
 drop table account_bank_records;
+drop table credits;
+drop table client_credit_records;

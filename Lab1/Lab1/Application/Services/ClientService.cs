@@ -1,4 +1,6 @@
 ﻿using Lab1.Application.Interfaces.Services;
+using Lab1.Domain;
+using Lab1.Domain.BankServices;
 using Lab1.Domain.Repositories;
 using Lab1.Domain.Users;
 
@@ -22,6 +24,7 @@ namespace Lab1.Application.Services
             {
                 var readingTask = clientRepository.ReadAsync(login, CancellationToken.None);
                 readingTask.Wait();
+                
                 Client client = readingTask.Result ?? throw new Exception();
 
                 Console.WriteLine("\nREGISTRATION ERROR!\nClient already exists!\n");
@@ -60,10 +63,26 @@ namespace Lab1.Application.Services
 
         public void DeleteClient(Client client)
         {
-            foreach (var acc in client.Accounts)
+            //Delete all accounts
             {
-                client.DeleteAccount(acc);
+                var accounts = new List<Account>(client.Accounts);
+
+                foreach (var acc in accounts)
+                {
+                    client.DeleteAccount(acc);
+                }
             }
+
+            //Delete all credits
+            {
+                var credits = new List<Credit>(client.Credits);
+
+                foreach (var cred in credits)
+                {
+                    client.DeleteCredit(cred);
+                }
+            }
+            
 
             var deletingTask = clientRepository.DeleteAsync(client, CancellationToken.None);
             deletingTask.Wait();

@@ -2,6 +2,7 @@
 using Lab1.Infrastructure.Options;
 using Lab1.Domain.Users;
 using Lab1.Domain.Repositories;
+using Lab1.Domain.BankServices;
 
 namespace Lab1.Infrastructure.Repositories
 {
@@ -127,6 +128,25 @@ namespace Lab1.Infrastructure.Repositories
             var command = new NpgsqlCommand(SQLquery, connection);
 
             command.Parameters.AddWithValue("@Login", client.Login);
+            command.Parameters.AddWithValue("@IsApproved", true);
+
+            await command.ExecuteNonQueryAsync(cancellationToken);
+        }
+
+        public async Task ApproveClientCreditAsync(Credit credit, CancellationToken cancellationToken)
+        {
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            const string SQLquery = """
+                UPDATE credits
+                SET IsApproved = @IsApproved
+                WHERE IdNumber = @IdNumber
+                """;
+
+            var command = new NpgsqlCommand(SQLquery, connection);
+
+            command.Parameters.AddWithValue("@IdNumber", credit.IdNumber);
             command.Parameters.AddWithValue("@IsApproved", true);
 
             await command.ExecuteNonQueryAsync(cancellationToken);

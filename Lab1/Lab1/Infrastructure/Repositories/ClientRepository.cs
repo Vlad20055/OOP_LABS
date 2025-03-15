@@ -1,4 +1,6 @@
-﻿using Lab1.Domain;
+﻿using System.Security.Principal;
+using Lab1.Domain;
+using Lab1.Domain.BankServices;
 using Lab1.Domain.Repositories;
 using Lab1.Domain.Users;
 using Lab1.Infrastructure.Options;
@@ -87,9 +89,13 @@ namespace Lab1.Infrastructure.Repositories
             client.IsApproved = (bool)reader["IsApproved"];
             client.Role = UserRole.Clilent;
             client.Accounts = ReadAccountsByClientAsync(login, cancellationToken).Result;
+            client.Credits = ReadCreditsByClientAsync(login, cancellationToken).Result;
+            
 
             return client;
         }
+
+        /*********************************************ACCOUNT*********************************************/
 
         public async Task CreateAccountAsync(Account account, CancellationToken cancellationToken)
         {
@@ -245,6 +251,127 @@ namespace Lab1.Infrastructure.Repositories
             await using var command = new NpgsqlCommand(SQLquery, connection);
             command.Parameters.AddWithValue("@IdNumber", account.IdNumber);
             command.Parameters.AddWithValue("@Name", bank.Name);
+
+            await command.ExecuteNonQueryAsync(cancellationToken);
+        }
+
+        /*********************************************CREDIT*********************************************/
+
+        public async Task CreateCreditAsync(Credit credit, CancellationToken cancellationToken)
+        {
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            const string SQLquery = """
+                INSERT INTO credits (Id, IsApproved, CreditPeriod, Persent, Rest)
+                VALUES (@Id, @IsApproved, @CreditPeriod, @Persent, @Rest)
+                RETURNING IdNumber;
+                """;
+
+            await using var command = new NpgsqlCommand(SQLquery, connection);
+
+            command.Parameters.AddWithValue("@Id", credit.Bank?.Id ?? throw new ArgumentNullException(nameof(credit.Bank), "Bank ID cannot be null."));
+            command.Parameters.AddWithValue("@IsApproved", credit.IsApproved);
+            command.Parameters.AddWithValue("@CreditPeriod", (int)credit.Period);
+            command.Parameters.AddWithValue("@Persent", credit.Persent);
+            command.Parameters.AddWithValue("@Rest", credit.Rest);
+
+            var result = await command.ExecuteScalarAsync(cancellationToken);
+
+            if (result == null)
+            {
+                throw new NpgsqlException("Failed to create credit. No ID was returned.");
+            }
+
+            credit.IdNumber = (int)result;
+        }
+
+        public async Task DeleteCreditAsync(Credit credit, CancellationToken cancellationToken)
+        {
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            const string SQLquery = """
+                DELETE FROM credits
+                WHERE IdNumber = @IdNumber;
+                """;
+
+            await using var command = new NpgsqlCommand(SQLquery, connection);
+
+            command.Parameters.AddWithValue("@IdNumber", credit.IdNumber);
+
+            await command.ExecuteNonQueryAsync(cancellationToken);
+        }
+
+        public async Task AddClientCreditRecordAsync(Client client, Credit credit, CancellationToken cancellationToken)
+        {
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            const string SQLquery = """
+                INSERT INTO client_credit_records
+                (Login, IdNumber)
+                VALUES 
+                (@Login, @IdNumber)
+                """;
+
+            var command = new NpgsqlCommand(SQLquery, connection);
+
+            command.Parameters.AddWithValue("@Login", client.Login);
+            command.Parameters.AddWithValue("@IdNumber", credit.IdNumber);
+
+            await command.ExecuteNonQueryAsync(cancellationToken);
+        }
+
+        public async Task<List<Credit>> ReadCreditsByClientAsync(string login, CancellationToken cancellationToken)
+        {
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            const string SQLquery = """
+                SELECT c.IdNumber, c.Id AS BankId, c.IsApproved, c.CreditPeriod, c.Persent, c.Rest
+                FROM credits c
+                JOIN client_credit_records ccr ON c.IdNumber = ccr.IdNumber
+                WHERE ccr.Login = @Login;
+                """;
+
+            await using var command = new NpgsqlCommand(SQLquery, connection);
+            command.Parameters.AddWithValue("@Login", login);
+
+            var credits = new List<Credit>();
+
+            await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                var credit = new Credit
+                {
+                    IdNumber = reader.GetInt32(reader.GetOrdinal("IdNumber")),
+                    Bank = (new BankRepository()).ReadAsync(reader.GetInt32(reader.GetOrdinal("BankId")), cancellationToken).Result,
+                    IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
+                    Period = (CreditPeriod)reader.GetInt32(reader.GetOrdinal("CreditPeriod")),
+                    Persent = reader.GetDecimal(reader.GetOrdinal("Persent")),
+                    Rest = reader.GetDecimal(reader.GetOrdinal("Rest"))
+                };
+            //Console.WriteLine(1);
+                credits.Add(credit);
+            }
+
+            return credits;
+        }
+
+        public async Task RemoveClientCreditRecordAsync(Client client, Credit credit, CancellationToken cancellationToken)
+        {
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            const string SQLquery = """
+                DELETE FROM client_credit_records
+                WHERE Login = @Login AND IdNumber = @IdNumber;
+                """;
+
+            await using var command = new NpgsqlCommand(SQLquery, connection);
+            command.Parameters.AddWithValue("@Login", client.Login);
+            command.Parameters.AddWithValue("@IdNumber", credit.IdNumber);
 
             await command.ExecuteNonQueryAsync(cancellationToken);
         }

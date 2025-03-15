@@ -1,4 +1,5 @@
-﻿using Lab1.Domain.Repositories;
+﻿using Lab1.Domain.BankServices;
+using Lab1.Domain.Repositories;
 
 namespace Lab1.Domain.Users
 {
@@ -11,6 +12,12 @@ namespace Lab1.Domain.Users
         {
             await managerRepository.ApproveClientAsync(client, CancellationToken.None);
             client.IsApproved = true;
+        }
+
+        public async Task ApproveCredit(Credit credit)
+        {
+            await managerRepository.ApproveClientCreditAsync(credit, CancellationToken.None);
+            credit.IsApproved = true;
         }
     }
 }

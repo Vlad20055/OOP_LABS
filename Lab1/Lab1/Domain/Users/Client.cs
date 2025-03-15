@@ -1,4 +1,6 @@
-﻿using Lab1.Domain.Repositories;
+﻿using System.Data;
+using Lab1.Domain.BankServices;
+using Lab1.Domain.Repositories;
 
 namespace Lab1.Domain.Users
 {
@@ -13,6 +15,7 @@ namespace Lab1.Domain.Users
         public string? Email { get; set; }
         public bool IsApproved { get; set; } = false;
         public List<Account> Accounts { get; set; } = new List<Account>();
+        public List<Credit> Credits { get; set; } = new List<Credit>();
 
 
         public Account? AddAccount(Bank bank)
@@ -27,8 +30,7 @@ namespace Lab1.Domain.Users
             {
                 Bank = bank,
                 Amount = 0,
-                IsActive = true,
-                Client = this
+                IsActive = true
             };
 
             var creationTask = clientRepository.CreateAccountAsync(account, CancellationToken.None);
@@ -37,7 +39,7 @@ namespace Lab1.Domain.Users
             var accountBankTask = clientRepository.AddAccountBankRecordAsync(account, bank, CancellationToken.None);
             
             Task.WaitAll(clientAccountTask,  accountBankTask);
-            
+
             Accounts.Add(account);
 
             return account;
@@ -59,6 +61,49 @@ namespace Lab1.Domain.Users
             deletingAccountTask.Wait();
 
             Accounts.Remove(account);
+        }
+
+        public Credit? AddCredit(Bank bank, CreditPeriod creditPeriod, decimal percent, decimal rest)
+        {
+            if (!IsApproved)
+            {
+                Console.WriteLine("\nERROR!\nClient is not approved\n");
+                return null;
+            }
+
+            Credit credit = new Credit()
+            {
+                Bank = bank,
+                IsApproved = false,
+                Period = creditPeriod,
+                Persent = percent,
+                Rest = rest
+            };
+
+            var creatingTask = clientRepository.CreateCreditAsync(credit, CancellationToken.None);
+            creatingTask.Wait();
+            var clientCreditTask = clientRepository.AddClientCreditRecordAsync(this, credit, CancellationToken.None);
+            clientCreditTask.Wait();
+
+            Credits.Add(credit);
+
+            return credit;
+        }
+
+        public void DeleteCredit(Credit credit)
+        {
+            if (!IsApproved)
+            {
+                Console.WriteLine("\nERROR!\nClient is not approved\n");
+                return;
+            }
+
+            var deletingTask = clientRepository.DeleteCreditAsync(credit, CancellationToken.None);
+            deletingTask.Wait();
+            var deletingClientCreditTask = clientRepository.RemoveClientCreditRecordAsync(this, credit, CancellationToken.None);
+            deletingClientCreditTask.Wait();
+
+            Credits.Remove(credit);
         }
     }
 }

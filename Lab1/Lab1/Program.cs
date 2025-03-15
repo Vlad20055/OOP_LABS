@@ -1,6 +1,7 @@
 ﻿using Lab1.Application.Services;
 using Lab1.Domain;
 using Lab1.Domain.Users;
+using Lab1.Domain.BankServices;
 using Lab1.Infrastructure.Repositories;
 
 
@@ -36,22 +37,30 @@ Manager managerEkaterina = managerService.AddManager(
 
 Bank Belarusbank = bankService.Register("Belarusbank");
 
-await managerEkaterina.ApproveClient(clientVladislav);
-
-Account account = clientVladislav.AddAccount(Belarusbank) ?? new Account();
 
 
+//await managerEkaterina.ApproveClient(clientVladislav);
+//clientVladislav.AddAccount(Belarusbank);
+//clientVladislav.AddCredit(Belarusbank, CreditPeriod.Month_3, 2, 100);
+//clientVladislav = clientService.ReadClient("Vlad20055") ?? throw new Exception("No such Client");
+await managerEkaterina.ApproveCredit(clientVladislav.Credits[0]);
 
-clientVladislav.DeleteAccount(clientVladislav.Accounts[2]);
-
-clientVladislav = clientService.ReadClient("Vlad20055") ?? throw new Exception("No such Client");
-
+Console.WriteLine("Accounts:");
 foreach (var acc in clientVladislav.Accounts)
 {
-    Console.WriteLine(acc.IdNumber);
+    Console.WriteLine(acc.ToString());
 }
 
-//bankService.Unregister(Belarusbank);
+Console.WriteLine("Credits:");
+foreach (var cred in clientVladislav.Credits)
+{
+    Console.WriteLine(cred.ToString());
+}
+
+//clientVladislav.DeleteCredit(clientVladislav.Credits[0]);
+//clientVladislav.DeleteAccount(clientVladislav.Accounts[0]);
+
+//bankService.Unregister(Belarusbank); // Doesn't work correctly!
 //managerService.DeleteManager(managerEkaterina);
 //clientService.DeleteClient(clientVladislav);
 

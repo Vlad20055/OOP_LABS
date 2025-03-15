@@ -1,4 +1,5 @@
-﻿using Lab1.Domain.Users;
+﻿using Lab1.Domain.BankServices;
+using Lab1.Domain.Users;
 
 namespace Lab1.Domain.Repositories
 {
@@ -6,5 +7,6 @@ namespace Lab1.Domain.Repositories
     {
         public Task<List<Client>> ReadAllNotApprovedClientsAsync(CancellationToken cancellationToken);
         public Task ApproveClientAsync(Client client, CancellationToken cancellationToken);
+        public Task ApproveClientCreditAsync(Credit credit, CancellationToken cancellationToken);
     }
 }
