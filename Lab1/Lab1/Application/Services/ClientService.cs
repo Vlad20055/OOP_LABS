@@ -83,7 +83,26 @@ namespace Lab1.Application.Services
                 }
             }
             
+            //Delete all installments
+            {
+                var installments = new List<Installment>(client.Installments);
 
+                foreach (var inst in installments)
+                {
+                    client.DeleteInstallment(inst);
+                }
+            }
+            
+            //Delete all deposits
+            {
+                var deposits = new List<Deposit>(client.Deposits);
+
+                foreach (var dep in deposits)
+                {
+                    client.DeleteDeposit(dep);
+                }
+            }
+            
             var deletingTask = clientRepository.DeleteAsync(client, CancellationToken.None);
             deletingTask.Wait();
         }

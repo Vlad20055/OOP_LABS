@@ -7,6 +7,6 @@ namespace Lab1.Domain.Repositories
     {
         public Task<List<Client>> ReadAllNotApprovedClientsAsync(CancellationToken cancellationToken);
         public Task ApproveClientAsync(Client client, CancellationToken cancellationToken);
-        public Task ApproveClientCreditAsync(Credit credit, CancellationToken cancellationToken);
+        public Task ApproveClientBankAbilityAsync(BankAbility bankAbility, CancellationToken cancellationToken);
     }
 }

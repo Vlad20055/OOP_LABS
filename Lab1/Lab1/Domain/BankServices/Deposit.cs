@@ -1,16 +1,18 @@
-﻿namespace Lab1.Domain.BankServices
+﻿
+
+namespace Lab1.Domain.BankServices
 {
-    internal class Credit : BankAbility
+    internal class Deposit : BankAbility
     {
-    
         public override string ToString()
         {
-            return $"Credit ID: {IdNumber}, " +
+            return $"Deposit ID: {IdNumber}, " +
                    $"Bank: {Bank?.Name ?? "N/A"} (ID: {Bank?.Id}), " +
                    $"IsApproved: {IsApproved}, " +
                    $"Period: {Period.ToString() ?? "N/A"}, " +
                    $"Interest Rate: {Persent}%, " +
-                   $"Remaining Amount: {Amount:C}";
+                   $"Amount: {Amount:C}";
+
         }
     }
 }

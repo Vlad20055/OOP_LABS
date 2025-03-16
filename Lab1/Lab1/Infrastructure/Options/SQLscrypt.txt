@@ -58,9 +58,9 @@ create table credits
 	IdNumber Serial not null,
 	Id int not null,
 	IsApproved boolean not null,
-	CreditPeriod int not null,
+	Period int not null,
 	Persent decimal not null,
-	Rest decimal not null
+	Amount decimal not null
 );
 
 
@@ -69,6 +69,47 @@ create table client_credit_records
 	Login text not null,
 	IdNumber int not null
 );
+
+create table installments
+(
+	IdNumber Serial not null,
+	Id int not null,
+	IsApproved boolean not null,
+	Period int not null,
+	Persent decimal not null,
+	Amount decimal not null
+);
+
+
+create table client_installment_records
+(
+	Login text not null,
+	IdNumber int not null
+);
+
+create table deposits
+(
+	IdNumber Serial not null,
+	Id int not null,
+	IsApproved boolean not null,
+	Period int not null,
+	Persent decimal not null,
+	Amount decimal not null
+);
+
+
+create table client_deposit_records
+(
+	Login text not null,
+	IdNumber int not null
+);
+
+
+
+
+
+
+
 
 
 
@@ -82,3 +123,7 @@ drop table client_account_records;
 drop table account_bank_records;
 drop table credits;
 drop table client_credit_records;
+drop table installments;
+drop table client_installment_records;
+drop table deposits;
+drop table client_deposit_records;

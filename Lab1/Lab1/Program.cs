@@ -1,7 +1,7 @@
 ﻿using Lab1.Application.Services;
 using Lab1.Domain;
-using Lab1.Domain.Users;
 using Lab1.Domain.BankServices;
+using Lab1.Domain.Users;
 using Lab1.Infrastructure.Repositories;
 
 
@@ -41,24 +41,47 @@ Bank Belarusbank = bankService.Register("Belarusbank");
 
 //await managerEkaterina.ApproveClient(clientVladislav);
 //clientVladislav.AddAccount(Belarusbank);
-//clientVladislav.AddCredit(Belarusbank, CreditPeriod.Month_3, 2, 100);
-//clientVladislav = clientService.ReadClient("Vlad20055") ?? throw new Exception("No such Client");
-await managerEkaterina.ApproveCredit(clientVladislav.Credits[0]);
+//clientVladislav.AddCredit(Belarusbank, Period.Month_3, 2, 100);
+//clientVladislav.AddInstallment(Belarusbank, Period.Month_24, 1.5m, 300);
+//clientVladislav.AddDeposit(Belarusbank, Period.Month_12, 2.5m, 1000);
+
+clientVladislav = clientService.ReadClient("Vlad20055") ?? throw new Exception("No such Client");
+
+//await managerEkaterina.ApproveCredit(clientVladislav.Credits[0]);
+//await managerEkaterina.ApproveInstallment(clientVladislav.Installments[0]);
+//await managerEkaterina.ApproveDeposit(clientVladislav.Deposits[0]);
 
 Console.WriteLine("Accounts:");
 foreach (var acc in clientVladislav.Accounts)
 {
     Console.WriteLine(acc.ToString());
 }
+Console.WriteLine();
 
 Console.WriteLine("Credits:");
 foreach (var cred in clientVladislav.Credits)
 {
     Console.WriteLine(cred.ToString());
 }
+Console.WriteLine();
 
-//clientVladislav.DeleteCredit(clientVladislav.Credits[0]);
+Console.WriteLine("Installments:");
+foreach (var inst in clientVladislav.Installments)
+{
+    Console.WriteLine(inst.ToString());
+}
+Console.WriteLine();
+
+Console.WriteLine("Deposits:");
+foreach (var dep in clientVladislav.Deposits)
+{
+    Console.WriteLine(dep.ToString());
+}
+
 //clientVladislav.DeleteAccount(clientVladislav.Accounts[0]);
+//clientVladislav.DeleteCredit(clientVladislav.Credits[0]);
+//clientVladislav.DeleteInstallment(clientVladislav.Installments[0]);
+//clientVladislav.DeleteDeposit(clientVladislav.Deposits[0]);
 
 //bankService.Unregister(Belarusbank); // Doesn't work correctly!
 //managerService.DeleteManager(managerEkaterina);

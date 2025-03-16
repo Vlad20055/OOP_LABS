@@ -16,6 +16,9 @@ namespace Lab1.Domain.Users
         public bool IsApproved { get; set; } = false;
         public List<Account> Accounts { get; set; } = new List<Account>();
         public List<Credit> Credits { get; set; } = new List<Credit>();
+        public List<Installment> Installments { get; set; } = new List<Installment>();
+        public List<Deposit> Deposits { get; set; } = new List<Deposit>();
+
 
 
         public Account? AddAccount(Bank bank)
@@ -63,7 +66,7 @@ namespace Lab1.Domain.Users
             Accounts.Remove(account);
         }
 
-        public Credit? AddCredit(Bank bank, CreditPeriod creditPeriod, decimal percent, decimal rest)
+        public Credit? AddCredit(Bank bank, Period period, decimal percent, decimal amount)
         {
             if (!IsApproved)
             {
@@ -73,16 +76,17 @@ namespace Lab1.Domain.Users
 
             Credit credit = new Credit()
             {
+                Type = AbilityType.Credit,
                 Bank = bank,
                 IsApproved = false,
-                Period = creditPeriod,
+                Period = period,
                 Persent = percent,
-                Rest = rest
+                Amount = amount
             };
 
-            var creatingTask = clientRepository.CreateCreditAsync(credit, CancellationToken.None);
+            var creatingTask = clientRepository.CreateBankAbilityAsync(credit, CancellationToken.None);
             creatingTask.Wait();
-            var clientCreditTask = clientRepository.AddClientCreditRecordAsync(this, credit, CancellationToken.None);
+            var clientCreditTask = clientRepository.AddClientBankAbilityRecordAsync(this, credit, CancellationToken.None);
             clientCreditTask.Wait();
 
             Credits.Add(credit);
@@ -98,12 +102,100 @@ namespace Lab1.Domain.Users
                 return;
             }
 
-            var deletingTask = clientRepository.DeleteCreditAsync(credit, CancellationToken.None);
+            var deletingTask = clientRepository.DeleteBankAbilityAsync(credit, CancellationToken.None);
             deletingTask.Wait();
-            var deletingClientCreditTask = clientRepository.RemoveClientCreditRecordAsync(this, credit, CancellationToken.None);
+            var deletingClientCreditTask = clientRepository.RemoveClientBankAbilityRecordAsync(this, credit, CancellationToken.None);
             deletingClientCreditTask.Wait();
 
             Credits.Remove(credit);
+        }
+
+        public Installment? AddInstallment(Bank bank, Period period, decimal percent, decimal amount)
+        {
+            if (!IsApproved)
+            {
+                Console.WriteLine("\nERROR!\nClient is not approved\n");
+                return null;
+            }
+
+            Installment installment = new Installment()
+            {
+                Type = AbilityType.Installment,
+                Bank = bank,
+                IsApproved = false,
+                Period = period,
+                Persent = percent,
+                Amount = amount
+            };
+
+            var creatingTask = clientRepository.CreateBankAbilityAsync(installment, CancellationToken.None);
+            creatingTask.Wait();
+            var clientCreditTask = clientRepository.AddClientBankAbilityRecordAsync(this, installment, CancellationToken.None);
+            clientCreditTask.Wait();
+
+            Installments.Add(installment);
+
+            return installment;
+        }
+
+        public void DeleteInstallment(Installment installment)
+        {
+            if (!IsApproved)
+            {
+                Console.WriteLine("\nERROR!\nClient is not approved\n");
+                return;
+            }
+
+            var deletingTask = clientRepository.DeleteBankAbilityAsync(installment, CancellationToken.None);
+            deletingTask.Wait();
+            var deletingClientCreditTask = clientRepository.RemoveClientBankAbilityRecordAsync(this, installment, CancellationToken.None);
+            deletingClientCreditTask.Wait();
+
+            Installments.Remove(installment);
+        }
+
+        public Deposit? AddDeposit(Bank bank, Period period, decimal percent, decimal amount)
+        {
+            if (!IsApproved)
+            {
+                Console.WriteLine("\nERROR!\nClient is not approved\n");
+                return null;
+            }
+
+            Deposit deposit = new Deposit()
+            {
+                Type = AbilityType.Deposit,
+                Bank = bank,
+                IsApproved = false,
+                Period = period,
+                Persent = percent,
+                Amount = amount
+            };
+
+            var creatingTask = clientRepository.CreateBankAbilityAsync(deposit, CancellationToken.None);
+            creatingTask.Wait();
+            var clientCreditTask = clientRepository.AddClientBankAbilityRecordAsync(this, deposit, CancellationToken.None);
+            clientCreditTask.Wait();
+
+           Deposits.Add(deposit);
+
+            return deposit;
+        }
+
+        public void DeleteDeposit(Deposit deposit)
+        {
+            if (!IsApproved)
+            {
+                Console.WriteLine("\nERROR!\nClient is not approved\n");
+                return;
+            }
+
+            var deletingTask = clientRepository.DeleteBankAbilityAsync(deposit, CancellationToken.None);
+            deletingTask.Wait();
+            var deletingClientCreditTask = clientRepository.RemoveClientBankAbilityRecordAsync(this, deposit, CancellationToken.None);
+            deletingClientCreditTask.Wait();
+
+            Deposits.Remove(deposit);
         }
     }
 }

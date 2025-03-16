@@ -133,20 +133,38 @@ namespace Lab1.Infrastructure.Repositories
             await command.ExecuteNonQueryAsync(cancellationToken);
         }
 
-        public async Task ApproveClientCreditAsync(Credit credit, CancellationToken cancellationToken)
+        public async Task ApproveClientBankAbilityAsync(BankAbility bankAbility, CancellationToken cancellationToken)
         {
             await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
             await connection.OpenAsync(cancellationToken);
 
-            const string SQLquery = """
-                UPDATE credits
+            string table = "";
+
+            switch (bankAbility.Type)
+            {
+                case AbilityType.Credit:
+                    table = "credits";
+                    break;
+                case AbilityType.Installment:
+                    table = "installments";
+                    break;
+                case AbilityType.Deposit:
+                    table = "deposits";
+                    break;
+                default:
+                    throw new Exception("No such AbilityType!");
+            }
+
+            string SQLquery = "UPDATE " + table +
+                """
+
                 SET IsApproved = @IsApproved
                 WHERE IdNumber = @IdNumber
                 """;
 
             var command = new NpgsqlCommand(SQLquery, connection);
 
-            command.Parameters.AddWithValue("@IdNumber", credit.IdNumber);
+            command.Parameters.AddWithValue("@IdNumber", bankAbility.IdNumber);
             command.Parameters.AddWithValue("@IsApproved", true);
 
             await command.ExecuteNonQueryAsync(cancellationToken);

@@ -1,4 +1,5 @@
-﻿using System.Security.Principal;
+﻿using System.Runtime.CompilerServices;
+using System.Security.Principal;
 using Lab1.Domain;
 using Lab1.Domain.BankServices;
 using Lab1.Domain.Repositories;
@@ -90,7 +91,8 @@ namespace Lab1.Infrastructure.Repositories
             client.Role = UserRole.Clilent;
             client.Accounts = ReadAccountsByClientAsync(login, cancellationToken).Result;
             client.Credits = ReadCreditsByClientAsync(login, cancellationToken).Result;
-            
+            client.Installments = ReadInstallmentsByClientAsync(login, cancellationToken).Result;
+            client.Deposits = ReadDepositsByClientAsync(login, cancellationToken).Result;
 
             return client;
         }
@@ -255,61 +257,117 @@ namespace Lab1.Infrastructure.Repositories
             await command.ExecuteNonQueryAsync(cancellationToken);
         }
 
-        /*********************************************CREDIT*********************************************/
 
-        public async Task CreateCreditAsync(Credit credit, CancellationToken cancellationToken)
+        /********************************************BANK ABILITY*********************************************/
+
+        public async Task CreateBankAbilityAsync(BankAbility bankAbility, CancellationToken cancellationToken)
         {
             await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
             await connection.OpenAsync(cancellationToken);
 
-            const string SQLquery = """
-                INSERT INTO credits (Id, IsApproved, CreditPeriod, Persent, Rest)
-                VALUES (@Id, @IsApproved, @CreditPeriod, @Persent, @Rest)
+            string table = "";
+
+            switch (bankAbility.Type)
+            {
+                case AbilityType.Credit:
+                    table = "credits";
+                    break;
+                case AbilityType.Installment:
+                    table = "installments";
+                    break;
+                case AbilityType.Deposit:
+                    table = "deposits";
+                    break;
+                default:
+                    throw new Exception("No such AbilityType!");
+            }
+
+            string SQLquery = "INSERT INTO " + table +
+                """
+                
+                (Id, IsApproved, Period, Persent, Amount)
+                VALUES (@Id, @IsApproved, @Period, @Persent, @Amount)
                 RETURNING IdNumber;
                 """;
 
             await using var command = new NpgsqlCommand(SQLquery, connection);
 
-            command.Parameters.AddWithValue("@Id", credit.Bank?.Id ?? throw new ArgumentNullException(nameof(credit.Bank), "Bank ID cannot be null."));
-            command.Parameters.AddWithValue("@IsApproved", credit.IsApproved);
-            command.Parameters.AddWithValue("@CreditPeriod", (int)credit.Period);
-            command.Parameters.AddWithValue("@Persent", credit.Persent);
-            command.Parameters.AddWithValue("@Rest", credit.Rest);
+            command.Parameters.AddWithValue("@Id", bankAbility.Bank?.Id ?? throw new ArgumentNullException(nameof(bankAbility.Bank), "Bank ID cannot be null."));
+            command.Parameters.AddWithValue("@IsApproved", bankAbility.IsApproved);
+            command.Parameters.AddWithValue("@Period", (int)bankAbility.Period);
+            command.Parameters.AddWithValue("@Persent", bankAbility.Persent);
+            command.Parameters.AddWithValue("@Amount", bankAbility.Amount);
 
             var result = await command.ExecuteScalarAsync(cancellationToken);
 
             if (result == null)
             {
-                throw new NpgsqlException("Failed to create credit. No ID was returned.");
+                throw new NpgsqlException("Failed to create BankAbility. No ID was returned.");
             }
 
-            credit.IdNumber = (int)result;
+            bankAbility.IdNumber = (int)result;
         }
 
-        public async Task DeleteCreditAsync(Credit credit, CancellationToken cancellationToken)
+        public async Task DeleteBankAbilityAsync(BankAbility bankAbility, CancellationToken cancellationToken)
         {
             await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
             await connection.OpenAsync(cancellationToken);
 
-            const string SQLquery = """
-                DELETE FROM credits
+            string table = "";
+
+            switch (bankAbility.Type)
+            {
+                case AbilityType.Credit:
+                    table = "credits";
+                    break;
+                case AbilityType.Installment:
+                    table = "installments";
+                    break;
+                case AbilityType.Deposit:
+                    table = "deposits";
+                    break;
+                default:
+                    throw new Exception("No such AbilityType!");
+            }
+
+            string SQLquery = "DELETE FROM " + table +
+                """
+
                 WHERE IdNumber = @IdNumber;
                 """;
 
             await using var command = new NpgsqlCommand(SQLquery, connection);
 
-            command.Parameters.AddWithValue("@IdNumber", credit.IdNumber);
+            command.Parameters.AddWithValue("@IdNumber", bankAbility.IdNumber);
 
             await command.ExecuteNonQueryAsync(cancellationToken);
         }
 
-        public async Task AddClientCreditRecordAsync(Client client, Credit credit, CancellationToken cancellationToken)
+        public async Task AddClientBankAbilityRecordAsync(Client client, BankAbility bankAbility, CancellationToken cancellationToken)
         {
             await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
             await connection.OpenAsync(cancellationToken);
 
-            const string SQLquery = """
-                INSERT INTO client_credit_records
+            string table = "";
+
+            switch (bankAbility.Type)
+            {
+                case AbilityType.Credit:
+                    table = "client_credit_records";
+                    break;
+                case AbilityType.Installment:
+                    table = "client_installment_records";
+                    break;
+                case AbilityType.Deposit:
+                    table = "client_deposit_records";
+                    break;
+                default:
+                    throw new Exception("No such AbilityType!");
+            }
+
+            string SQLquery = "INSERT INTO " + table +
+                """
+
                 (Login, IdNumber)
                 VALUES 
                 (@Login, @IdNumber)
@@ -318,10 +376,48 @@ namespace Lab1.Infrastructure.Repositories
             var command = new NpgsqlCommand(SQLquery, connection);
 
             command.Parameters.AddWithValue("@Login", client.Login);
-            command.Parameters.AddWithValue("@IdNumber", credit.IdNumber);
+            command.Parameters.AddWithValue("@IdNumber", bankAbility.IdNumber);
 
             await command.ExecuteNonQueryAsync(cancellationToken);
         }
+
+        public async Task RemoveClientBankAbilityRecordAsync(Client client, BankAbility bankAbility, CancellationToken cancellationToken)
+        {
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            string table = "";
+
+            switch (bankAbility.Type)
+            {
+                case AbilityType.Credit:
+                    table = "client_credit_records";
+                    break;
+                case AbilityType.Installment:
+                    table = "client_installment_records";
+                    break;
+                case AbilityType.Deposit:
+                    table = "client_deposit_records";
+                    break;
+                default:
+                    throw new Exception("No such AbilityType!");
+            }
+
+            string SQLquery = "DELETE FROM " + table +
+                """
+
+                WHERE Login = @Login AND IdNumber = @IdNumber;
+                """;
+
+            await using var command = new NpgsqlCommand(SQLquery, connection);
+            command.Parameters.AddWithValue("@Login", client.Login);
+            command.Parameters.AddWithValue("@IdNumber", bankAbility.IdNumber);
+
+            await command.ExecuteNonQueryAsync(cancellationToken);
+        }
+
+
+        /********************************************CREDIT*********************************************/
 
         public async Task<List<Credit>> ReadCreditsByClientAsync(string login, CancellationToken cancellationToken)
         {
@@ -329,7 +425,7 @@ namespace Lab1.Infrastructure.Repositories
             await connection.OpenAsync(cancellationToken);
 
             const string SQLquery = """
-                SELECT c.IdNumber, c.Id AS BankId, c.IsApproved, c.CreditPeriod, c.Persent, c.Rest
+                SELECT c.IdNumber, c.Id AS BankId, c.IsApproved, c.Period, c.Persent, c.Amount
                 FROM credits c
                 JOIN client_credit_records ccr ON c.IdNumber = ccr.IdNumber
                 WHERE ccr.Login = @Login;
@@ -345,35 +441,102 @@ namespace Lab1.Infrastructure.Repositories
             {
                 var credit = new Credit
                 {
+                    Type = AbilityType.Credit,
                     IdNumber = reader.GetInt32(reader.GetOrdinal("IdNumber")),
                     Bank = (new BankRepository()).ReadAsync(reader.GetInt32(reader.GetOrdinal("BankId")), cancellationToken).Result,
                     IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
-                    Period = (CreditPeriod)reader.GetInt32(reader.GetOrdinal("CreditPeriod")),
+                    Period = (Period)reader.GetInt32(reader.GetOrdinal("Period")),
                     Persent = reader.GetDecimal(reader.GetOrdinal("Persent")),
-                    Rest = reader.GetDecimal(reader.GetOrdinal("Rest"))
+                    Amount = reader.GetDecimal(reader.GetOrdinal("Amount"))
                 };
-            //Console.WriteLine(1);
+
                 credits.Add(credit);
             }
 
             return credits;
         }
 
-        public async Task RemoveClientCreditRecordAsync(Client client, Credit credit, CancellationToken cancellationToken)
+
+        /********************************************INSTALLMENT*********************************************/
+
+        public async Task<List<Installment>> ReadInstallmentsByClientAsync(string login, CancellationToken cancellationToken)
         {
             await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
             await connection.OpenAsync(cancellationToken);
 
             const string SQLquery = """
-                DELETE FROM client_credit_records
-                WHERE Login = @Login AND IdNumber = @IdNumber;
+                SELECT c.IdNumber, c.Id AS BankId, c.IsApproved, c.Period, c.Persent, c.Amount
+                FROM installments c
+                JOIN client_installment_records ccr ON c.IdNumber = ccr.IdNumber
+                WHERE ccr.Login = @Login;
                 """;
 
             await using var command = new NpgsqlCommand(SQLquery, connection);
-            command.Parameters.AddWithValue("@Login", client.Login);
-            command.Parameters.AddWithValue("@IdNumber", credit.IdNumber);
+            command.Parameters.AddWithValue("@Login", login);
 
-            await command.ExecuteNonQueryAsync(cancellationToken);
+            var installments = new List<Installment>();
+
+            await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                var installment = new Installment
+                {
+                    Type = AbilityType.Installment,
+                    IdNumber = reader.GetInt32(reader.GetOrdinal("IdNumber")),
+                    Bank = (new BankRepository()).ReadAsync(reader.GetInt32(reader.GetOrdinal("BankId")), cancellationToken).Result,
+                    IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
+                    Period = (Period)reader.GetInt32(reader.GetOrdinal("Period")),
+                    Persent = reader.GetDecimal(reader.GetOrdinal("Persent")),
+                    Amount = reader.GetDecimal(reader.GetOrdinal("Amount"))
+                };
+
+                installments.Add(installment);
+            }
+
+            return installments;
         }
+
+
+        /********************************************DEPOSIT*********************************************/
+
+        public async Task<List<Deposit>> ReadDepositsByClientAsync(string login, CancellationToken cancellationToken)
+        {
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            const string SQLquery = """
+                SELECT c.IdNumber, c.Id AS BankId, c.IsApproved, c.Period, c.Persent, c.Amount
+                FROM deposits c
+                JOIN client_deposit_records ccr ON c.IdNumber = ccr.IdNumber
+                WHERE ccr.Login = @Login;
+                """;
+
+            await using var command = new NpgsqlCommand(SQLquery, connection);
+            command.Parameters.AddWithValue("@Login", login);
+
+            var deposits = new List<Deposit>();
+
+            await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                var deposit = new Deposit
+                {
+                    Type = AbilityType.Deposit,
+                    IdNumber = reader.GetInt32(reader.GetOrdinal("IdNumber")),
+                    Bank = (new BankRepository()).ReadAsync(reader.GetInt32(reader.GetOrdinal("BankId")), cancellationToken).Result,
+                    IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
+                    Period = (Period)reader.GetInt32(reader.GetOrdinal("Period")),
+                    Persent = reader.GetDecimal(reader.GetOrdinal("Persent")),
+                    Amount = reader.GetDecimal(reader.GetOrdinal("Amount"))
+                };
+
+                deposits.Add(deposit);
+            }
+
+            return deposits;
+        }
+
+
+        
     }
 }

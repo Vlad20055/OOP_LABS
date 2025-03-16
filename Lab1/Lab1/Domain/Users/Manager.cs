@@ -16,8 +16,20 @@ namespace Lab1.Domain.Users
 
         public async Task ApproveCredit(Credit credit)
         {
-            await managerRepository.ApproveClientCreditAsync(credit, CancellationToken.None);
+            await managerRepository.ApproveClientBankAbilityAsync(credit, CancellationToken.None);
             credit.IsApproved = true;
+        }
+
+        public async Task ApproveInstallment(Installment installment)
+        {
+            await managerRepository.ApproveClientBankAbilityAsync(installment, CancellationToken.None);
+            installment.IsApproved = true;
+        }
+
+        public async Task ApproveDeposit(Deposit deposit)
+        {
+            await managerRepository.ApproveClientBankAbilityAsync(deposit, CancellationToken.None);
+            deposit.IsApproved = true;
         }
     }
 }
