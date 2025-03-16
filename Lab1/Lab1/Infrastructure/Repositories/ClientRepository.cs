@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Security.Principal;
-using Lab1.Domain;
+﻿using Lab1.Domain;
 using Lab1.Domain.BankServices;
 using Lab1.Domain.Repositories;
 using Lab1.Domain.Users;
@@ -74,25 +72,28 @@ namespace Lab1.Infrastructure.Repositories
 
             await using var reader = await command.ExecuteReaderAsync(cancellationToken);
 
-            var client = new Client(new ClientRepository());
 
-            if (!await reader.ReadAsync(cancellationToken)) throw new NpgsqlException();
+            if (!await reader.ReadAsync(cancellationToken)) return null;
 
-            client.Surname = (string)reader["Surname"];
-            client.Name = (string)reader["Name"];
-            client.Patronymic = (string)reader["Patronymic"];
-            client.PassportSeriesAndNumber = (string)reader["PassportSeriesAndNumber"];
-            client.IdNumber = (string)reader["IdNumber"];
-            client.PhoneNumber = (string)reader["PhoneNumber"];
-            client.Email = (string)reader["Email"];
-            client.Login = (string)reader["Login"];
-            client.Password = (string)reader["Password"];
-            client.IsApproved = (bool)reader["IsApproved"];
-            client.Role = UserRole.Clilent;
-            client.Accounts = ReadAccountsByClientAsync(login, cancellationToken).Result;
-            client.Credits = ReadCreditsByClientAsync(login, cancellationToken).Result;
-            client.Installments = ReadInstallmentsByClientAsync(login, cancellationToken).Result;
-            client.Deposits = ReadDepositsByClientAsync(login, cancellationToken).Result;
+            var client = new Client(new ClientRepository())
+            {
+                Surname = (string)reader["Surname"],
+                Name = (string)reader["Name"],
+                Patronymic = (string)reader["Patronymic"],
+                PassportSeriesAndNumber = (string)reader["PassportSeriesAndNumber"],
+                IdNumber = (string)reader["IdNumber"],
+                PhoneNumber = (string)reader["PhoneNumber"],
+                Email = (string)reader["Email"],
+                Login = (string)reader["Login"],
+                Password = (string)reader["Password"],
+                IsApproved = (bool)reader["IsApproved"],
+                Role = UserRole.Clilent,
+                Accounts = ReadAccountsByClientAsync(login, cancellationToken).Result,
+                Credits = ReadCreditsByClientAsync(login, cancellationToken).Result,
+                Installments = ReadInstallmentsByClientAsync(login, cancellationToken).Result,
+                Deposits = ReadDepositsByClientAsync(login, cancellationToken).Result
+            };
+            
 
             return client;
         }

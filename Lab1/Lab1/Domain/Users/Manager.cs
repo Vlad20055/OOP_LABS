@@ -5,8 +5,8 @@ namespace Lab1.Domain.Users
 {
     internal class Manager(IManagerRepository managerRepository) : User
     {
-        public string IdNumber { get; set; }
-        public string Name { get; set; }
+        public required string IdNumber { get; set; }
+        public required string Name { get; set; }
 
         public async Task ApproveClient(Client client)
         {

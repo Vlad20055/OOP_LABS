@@ -20,38 +20,34 @@ namespace Lab1.Application.Services
             string password
             )
         {
-            try 
-            {
-                var readingTask = clientRepository.ReadAsync(login, CancellationToken.None);
-                readingTask.Wait();
-                
-                Client client = readingTask.Result ?? throw new Exception();
+            var readingTask = clientRepository.ReadAsync(login, CancellationToken.None);
+            readingTask.Wait();
 
+            Client? client = readingTask.Result;
+
+            if ( client != null )
+            {
                 Console.WriteLine("\nREGISTRATION ERROR!\nClient already exists!\n");
-
                 return client;
             }
-            catch
+
+            client = new Client(clientRepository)
             {
-                Client client = new Client(clientRepository)
-                {
-                    Surname = surname,
-                    Name = name,
-                    Patronymic = patronymic,
-                    PassportSeriesAndNumber = passportSeriesAndNumber,
-                    IdNumber = idNumber,
-                    PhoneNumber = phoneNumber,
-                    Email = email,
-                    Login = login,
-                    Password = password,
-                    Role = UserRole.Clilent
-                };
+                Surname = surname,
+                Name = name,
+                Patronymic = patronymic,
+                PassportSeriesAndNumber = passportSeriesAndNumber,
+                IdNumber = idNumber,
+                PhoneNumber = phoneNumber,
+                Email = email,
+                Login = login,
+                Password = password,
+                Role = UserRole.Clilent
+            };
 
-                var creationTask = clientRepository.CreateAsync(client, CancellationToken.None);
-                creationTask.Wait();
-
-                return client;
-            }
+            var creationTask = clientRepository.CreateAsync(client, CancellationToken.None);
+            creationTask.Wait();
+            return client;
         }
 
         public Client? ReadClient(string login)

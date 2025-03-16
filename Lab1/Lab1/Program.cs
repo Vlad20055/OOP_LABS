@@ -8,9 +8,6 @@ using Lab1.Infrastructure.Repositories;
 
 Console.WriteLine("Hello, World!");
 
-User user = new User();
-user.Role = UserRole.Manager;
-Console.WriteLine(user.Role);
 
 ClientService clientService = new ClientService(new ClientRepository());
 ManagerService managerService = new ManagerService(new ManagerRepository());

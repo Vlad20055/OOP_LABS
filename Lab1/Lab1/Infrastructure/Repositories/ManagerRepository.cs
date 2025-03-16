@@ -47,15 +47,17 @@ namespace Lab1.Infrastructure.Repositories
 
             await using var reader = await command.ExecuteReaderAsync(cancellationToken);
 
-            var manager = new Manager(this);
 
-            if (!await reader.ReadAsync(cancellationToken)) throw new NpgsqlException();
+            if (!await reader.ReadAsync(cancellationToken)) return null;
 
-            manager.IdNumber = (string)reader["IdNumber"];
-            manager.Name = (string)reader["Name"];
-            manager.Login = (string)reader["Login"];
-            manager.Password = (string)reader["Password"];
-            manager.Role = UserRole.Manager;
+            var manager = new Manager(this)
+            {
+                IdNumber = (string)reader["IdNumber"],
+                Name = (string)reader["Name"],
+                Login = (string)reader["Login"],
+                Password = (string)reader["Password"],
+                Role = UserRole.Manager
+            };
 
             return manager;
         }

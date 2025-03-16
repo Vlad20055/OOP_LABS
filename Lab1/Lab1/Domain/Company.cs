@@ -11,10 +11,12 @@ namespace Lab1.Domain
 
     internal class Company
     {
-        public CompanyType Type { get; set; }
-        public string Name { get; set; }
-        public string PayerAccountNumber { get; set; }
-        public string BankIdentificationCode { get; set; } // shows what Bank Company is related to
-        public string Address { get; set; }
+        public int Id { get; set; }
+        public required CompanyType Type { get; set; }
+        public required string Name { get; set; }
+        public required int PayerAccountNumber { get; set; } // AccountId - shows company Account
+        public required int BankIdentificationCode { get; set; } // BankId - shows what Bank Company is related to
+        public required string Address { get; set; }
+
     }
 }

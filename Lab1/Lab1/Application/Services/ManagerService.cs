@@ -15,32 +15,30 @@ namespace Lab1.Application.Services
             string password
             )
         {
-            try
-            {
-                var readingTask = managerRepository.ReadAsync(login, CancellationToken.None);
-                Task.WaitAny(readingTask);
-                Manager manager = readingTask.Result;
+            
+            var readingTask = managerRepository.ReadAsync(login, CancellationToken.None);
+            Task.WaitAny(readingTask);
+            Manager? manager = readingTask.Result;
 
+            if (manager != null)
+            {
                 Console.WriteLine("\nREGISTRATION ERROR!\nManager already exists!\n");
-
                 return manager;
             }
-            catch
+
+            manager = new Manager(managerRepository)
             {
-                Manager manager = new Manager(managerRepository)
-                {
-                    IdNumber = idNumber,
-                    Name = name,
-                    Login = login,
-                    Password = password,
-                    Role = UserRole.Manager
-                };
+                IdNumber = idNumber,
+                Name = name,
+                Login = login,
+                Password = password,
+                Role = UserRole.Manager
+            };
 
-                var creationTask = managerRepository.CreateAsync(manager, CancellationToken.None);
-                Task.WaitAny(creationTask);
+            var creationTask = managerRepository.CreateAsync(manager, CancellationToken.None);
+            Task.WaitAny(creationTask);
 
-                return manager;
-            }
+            return manager;
         }
 
         public void DeleteManager(Manager manager)

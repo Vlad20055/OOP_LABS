@@ -105,7 +105,13 @@ create table client_deposit_records
 );
 
 
-
+create table salary_projects
+(
+	IdNumber Serial not null,
+	BankId int not null,
+	CompanyName text not null,
+	IsCompleted boolean not null
+);
 
 
 
@@ -127,3 +133,4 @@ drop table installments;
 drop table client_installment_records;
 drop table deposits;
 drop table client_deposit_records;
+drop table salary_projects;

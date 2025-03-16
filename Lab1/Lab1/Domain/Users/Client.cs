@@ -6,13 +6,13 @@ namespace Lab1.Domain.Users
 {
     internal class Client(IClientRepository clientRepository) : User
     {
-        public string? Surname { get; set; }
-        public string? Name { get; set; }
-        public string? Patronymic { get; set; }
-        public string? PassportSeriesAndNumber { get; set; }
-        public string? IdNumber { get; set; }
-        public string? PhoneNumber { get; set; }
-        public string? Email { get; set; }
+        public required string Surname { get; set; }
+        public required string Name { get; set; }
+        public required string Patronymic { get; set; }
+        public  required string PassportSeriesAndNumber { get; set; }
+        public required string IdNumber { get; set; }
+        public required string PhoneNumber { get; set; }
+        public required string Email { get; set; }
         public bool IsApproved { get; set; } = false;
         public List<Account> Accounts { get; set; } = new List<Account>();
         public List<Credit> Credits { get; set; } = new List<Credit>();
