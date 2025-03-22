@@ -197,5 +197,26 @@ namespace Lab1.Domain.Users
 
             Deposits.Remove(deposit);
         }
+
+        public void AddSalaryProjectRequest(Company company, decimal salary, Account account)
+        {
+            if (!IsApproved)
+            {
+                Console.WriteLine("\nERROR!\nClient is not approved\n");
+                return;
+            }
+
+            SalaryProjectRequest salaryProjectRequest = new SalaryProjectRequest()
+            {
+                Login = this.Login,
+                CompanyName = company.Name,
+                Account = account,
+                Salary = salary
+            };
+
+            var creatingSalaryProjectRequestTask = clientRepository.CreateSalaryProjectRequestAsync(salaryProjectRequest, CancellationToken.None);
+            creatingSalaryProjectRequestTask.Wait();
+            return;
+        }
     }
 }

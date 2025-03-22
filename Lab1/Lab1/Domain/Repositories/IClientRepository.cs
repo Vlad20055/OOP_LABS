@@ -36,6 +36,10 @@ namespace Lab1.Domain.Repositories
         /********************************************DEPOSIT*********************************************/
 
         public Task<List<Deposit>> ReadDepositsByClientAsync(string login, CancellationToken cancellationToken);
-        
+
+
+        /********************************************SALARY PROJECT REQUEST*********************************************/
+
+        public Task CreateSalaryProjectRequestAsync(SalaryProjectRequest salaryProjectRequest, CancellationToken cancellationToken);
     }
 }

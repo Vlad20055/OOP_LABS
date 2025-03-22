@@ -537,7 +537,38 @@ namespace Lab1.Infrastructure.Repositories
             return deposits;
         }
 
+        /********************************************SALARY PROJECT REQUEST*********************************************/
 
+        public async Task CreateSalaryProjectRequestAsync(SalaryProjectRequest salaryProjectRequest, CancellationToken cancellationToken)
+        {
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            const string SQLquery = """
+                INSERT INTO salary_project_request (Login, CompanyName, AccountId, Salary, IsApproved)
+                VALUES (@Login, @CompanyName, @AccountId, @Salary, @IsApproved)
+                RETURNING IdNumber;
+                """;
+
+            await using var command = new NpgsqlCommand(SQLquery, connection);
+
+            command.Parameters.AddWithValue("@Login", salaryProjectRequest.Login);
+            command.Parameters.AddWithValue("@CompanyName", salaryProjectRequest.CompanyName);
+            command.Parameters.AddWithValue("@AccountId", salaryProjectRequest.Account.IdNumber);
+            command.Parameters.AddWithValue("@Salary", salaryProjectRequest.Salary);
+            command.Parameters.AddWithValue("@IsApproved", salaryProjectRequest.IsApproved);
+
+            var result = await command.ExecuteScalarAsync(cancellationToken);
+
+            if (result == null)
+            {
+                throw new NpgsqlException("Failed to create salary project request. No ID was returned.");
+            }
+
+            salaryProjectRequest.IdNumber = (int)result;
+        }
+
+        
         
     }
 }

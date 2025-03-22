@@ -1,8 +1,7 @@
 ﻿using Lab1.Application.Interfaces.Services;
 using Lab1.Domain.Repositories;
 using Lab1.Domain.Users;
-using Lab1.Infrastructure;
-using Npgsql;
+
 
 namespace Lab1.Application.Services
 {
