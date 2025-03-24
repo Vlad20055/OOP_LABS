@@ -191,7 +191,6 @@ namespace Lab1.Infrastructure.Repositories
 
             await command.ExecuteNonQueryAsync(cancellationToken);
         }
-
         public async Task<Account?> ReadAccountAsync(int idNumber, CancellationToken cancellationToken)
         {
             await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
@@ -229,7 +228,6 @@ namespace Lab1.Infrastructure.Repositories
 
             return null; // Return null if no matching account is found
         }
-
         public async Task<Dictionary<Account, decimal>> ReadSalariesAsync(int salaryProjectId, CancellationToken cancellationToken)
         {
             var salariesDictionary = new Dictionary<Account, decimal>();
@@ -262,7 +260,6 @@ namespace Lab1.Infrastructure.Repositories
 
             return salariesDictionary;
         }
-
         public async Task<SalaryProject?> ReadSalaryProject(int idNumber, CancellationToken cancellationToken)
         {
             await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
@@ -294,6 +291,86 @@ namespace Lab1.Infrastructure.Repositories
             }
 
             return null; // Return null if no matching salary project is found
+        }
+        public async Task<SalaryProjectRequest?> ReadSalaryProjectRequestAsync(string login, string companyName, CancellationToken cancellationToken)
+        {
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            const string SQLquery = """
+        SELECT IdNumber, Login, CompanyName, AccountId, Salary, IsApproved
+        FROM salary_project_request
+        WHERE Login = @Login AND CompanyName = @CompanyName
+        """;
+
+            await using var command = new NpgsqlCommand(SQLquery, connection);
+            command.Parameters.AddWithValue("@Login", login);
+            command.Parameters.AddWithValue("@CompanyName", companyName);
+
+            await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+
+            if (await reader.ReadAsync(cancellationToken))
+            {
+                var request = new SalaryProjectRequest
+                {
+                    IdNumber = reader.GetInt32(reader.GetOrdinal("IdNumber")),
+                    Login = reader.GetString(reader.GetOrdinal("Login")),
+                    CompanyName = reader.GetString(reader.GetOrdinal("CompanyName")),
+                    Salary = reader.GetDecimal(reader.GetOrdinal("Salary")),
+                    IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
+                    Account = new Account
+                    {
+                        Bank = new Bank
+                        {
+                            Name = ""
+                        }
+                    }
+                };
+
+                // Fetch the associated Account using existing method
+                int accountId = reader.GetInt32(reader.GetOrdinal("AccountId"));
+                request.Account = await ReadAccountAsync(accountId, cancellationToken) ?? throw new Exception("No Account for SalaryProjectRequest");
+
+                return request;
+            }
+
+            return null; // Return null if no matching request is found
+        }
+        public async Task ApproveSalaryProjectRequestAsync(SalaryProjectRequest salaryProjectRequest, CancellationToken cancellationToken)
+        {
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            const string SQLquery = """
+        UPDATE salary_project_request
+        SET IsApproved = true
+        WHERE IdNumber = @IdNumber
+        """;
+
+            await using var command = new NpgsqlCommand(SQLquery, connection);
+            command.Parameters.AddWithValue("@IdNumber", salaryProjectRequest.IdNumber);
+
+            await command.ExecuteNonQueryAsync(cancellationToken);
+        }
+        public async Task AddSalaryAsync(SalaryProjectRequest salaryProjectRequest, SalaryProject salaryProject, CancellationToken cancellationToken)
+        {
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            const string SQLquery = """
+        INSERT INTO salaries
+        (SalaryProjectId, Salary, AccountId)
+        VALUES
+        (@SalaryProjectId, @Salary, @AccountId)
+        """;
+
+            await using var command = new NpgsqlCommand(SQLquery, connection);
+
+            command.Parameters.AddWithValue("@SalaryProjectId", salaryProject.IdNumber);
+            command.Parameters.AddWithValue("@Salary", salaryProjectRequest.Salary);
+            command.Parameters.AddWithValue("@AccountId", salaryProjectRequest.Account.IdNumber);
+
+            await command.ExecuteNonQueryAsync(cancellationToken);
         }
     }
 }

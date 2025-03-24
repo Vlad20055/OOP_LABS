@@ -32,6 +32,37 @@ namespace Lab1.Domain.Users
             
         }
 
+        public void ApproveSalaryProjectRequest(Client client)
+        {
+            if (Company.SalaryProject == null)
+            {
+                Console.WriteLine("\nERROR!\nNo SalaryProject for this company!");
+                return;
+            }
+
+            var readingTask = companySpecialistRepository.ReadSalaryProjectRequestAsync(client.Login, Company.Name, CancellationToken.None);
+            readingTask.Wait();
+            var salaryProjectRequest = readingTask.Result;
+
+            if (salaryProjectRequest == null)
+            {
+                Console.WriteLine("\nERROR!\nNo such SalaryProject!\n");
+                return;
+            }
+
+            if (salaryProjectRequest.IsApproved ==  true)
+            {
+                Console.WriteLine($"\nClinet {client.Name} has already approved!\n");
+                return;
+            }
+
+            var approvalRequestTask = companySpecialistRepository.ApproveSalaryProjectRequestAsync(salaryProjectRequest, CancellationToken.None);
+            approvalRequestTask.Wait();
+
+            var addingSalaryTask = companySpecialistRepository.AddSalaryAsync(salaryProjectRequest, Company.SalaryProject, CancellationToken.None);
+            addingSalaryTask.Wait();
+        }
+
         public override string ToString()
         {
             return $"CompanySpecialist: [Login: {Login}, Name: {Name}, IdNumber: {IdNumber}, Company: {Company.Name}]";

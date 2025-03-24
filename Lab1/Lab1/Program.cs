@@ -60,6 +60,8 @@ Company Microsoft = companyService.Register(
 
 CompanySpecialist specialistAnton = companySpecialistService.AddCompanySpecialist("Anton2006", "1234", "ID1", "Anton", Microsoft);
 //specialistAnton.AddSalaryProject();
+specialistAnton.ApproveSalaryProjectRequest(clientVladislav);
+specialistAnton.ApproveSalaryProjectRequest(clientAndrey);
 
 //await managerEkaterina.ApproveClient(clientVladislav);
 //await managerEkaterina.ApproveClient(clientAndrey);
