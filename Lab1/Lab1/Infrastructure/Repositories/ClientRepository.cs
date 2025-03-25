@@ -75,7 +75,7 @@ namespace Lab1.Infrastructure.Repositories
 
             if (!await reader.ReadAsync(cancellationToken)) return null;
 
-            var client = new Client(new ClientRepository())
+            var client = new Client(new ClientRepository(), new TransferRepository())
             {
                 Surname = (string)reader["Surname"],
                 Name = (string)reader["Name"],

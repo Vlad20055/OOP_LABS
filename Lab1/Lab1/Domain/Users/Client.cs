@@ -4,7 +4,7 @@ using Lab1.Domain.Repositories;
 
 namespace Lab1.Domain.Users
 {
-    internal class Client(IClientRepository clientRepository) : User
+    internal class Client(IClientRepository clientRepository, ITransferRepository transferRepository) : User
     {
         public required string Surname { get; set; }
         public required string Name { get; set; }
@@ -217,6 +217,36 @@ namespace Lab1.Domain.Users
             var creatingSalaryProjectRequestTask = clientRepository.CreateSalaryProjectRequestAsync(salaryProjectRequest, CancellationToken.None);
             creatingSalaryProjectRequestTask.Wait();
             return;
+        }
+
+        public void Transfer(Account senderAccount, Account recipientAccount, decimal amount)
+        {
+            if (!IsApproved)
+            {
+                Console.WriteLine("\nERROR!\nClient is not approved\n");
+                return;
+            }
+
+            if (senderAccount.Amount < amount)
+            {
+                Console.WriteLine("\nERROR!\nNot enough amount on sender account!\n");
+                return;
+            }
+
+            senderAccount.Amount -= amount;
+            recipientAccount.Amount += amount;
+
+            Transfer transfer = new Transfer
+            {
+                SenderAccount = senderAccount,
+                RecipienAccount = recipientAccount,
+                Amount = amount
+            };
+
+            CancellationToken cancellationToken = CancellationToken.None;
+            transferRepository.UpdateAccountAmountAsync(senderAccount, cancellationToken).Wait();
+            transferRepository.UpdateAccountAmountAsync(recipientAccount, cancellationToken);
+            transferRepository.CreateAsync(transfer, cancellationToken).Wait();
         }
     }
 }

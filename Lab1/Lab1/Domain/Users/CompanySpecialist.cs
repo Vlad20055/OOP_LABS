@@ -63,6 +63,21 @@ namespace Lab1.Domain.Users
             addingSalaryTask.Wait();
         }
 
+        public void DecompleteSalaryProject()
+        {
+            if (Company.SalaryProject != null)
+            {
+                Company.SalaryProject.IsCompleted = false;
+                companySpecialistRepository.DecompleteSalaryProjectAsync(Company.SalaryProject, CancellationToken.None).Wait();
+                return;
+            }
+            else
+            {
+                Console.WriteLine("\nERROR! No salary project!\n");
+                return;
+            }
+        }
+
         public override string ToString()
         {
             return $"CompanySpecialist: [Login: {Login}, Name: {Name}, IdNumber: {IdNumber}, Company: {Company.Name}]";

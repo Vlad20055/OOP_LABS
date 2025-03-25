@@ -6,7 +6,7 @@ using Lab1.Domain.Users;
 
 namespace Lab1.Application.Services
 {
-    internal class ClientService(IClientRepository clientRepository) : IClientService
+    internal class ClientService(IClientRepository clientRepository, ITransferRepository transferRepository) : IClientService
     {
         public Client Register(
             string surname,
@@ -31,7 +31,7 @@ namespace Lab1.Application.Services
                 return client;
             }
 
-            client = new Client(clientRepository)
+            client = new Client(clientRepository, transferRepository)
             {
                 Surname = surname,
                 Name = name,

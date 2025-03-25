@@ -12,5 +12,6 @@ namespace Lab1.Domain.Repositories
         public Task<SalaryProjectRequest?> ReadSalaryProjectRequestAsync(string login, string companyName, CancellationToken cancellationToken);
         public Task ApproveSalaryProjectRequestAsync(SalaryProjectRequest salaryProjectRequest, CancellationToken cancellationToken);
         public Task AddSalaryAsync(SalaryProjectRequest salaryProjectRequest, SalaryProject salaryProject, CancellationToken cancellationToken);
+        public Task DecompleteSalaryProjectAsync(SalaryProject salaryProject, CancellationToken cancellationToken);
     }
 }

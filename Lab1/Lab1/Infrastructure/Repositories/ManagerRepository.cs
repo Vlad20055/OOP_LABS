@@ -99,7 +99,7 @@ namespace Lab1.Infrastructure.Repositories
 
             while (await reader.ReadAsync(cancellationToken))
             {
-                clients.Add(new Client(new ClientRepository())
+                clients.Add(new Client(new ClientRepository(), new TransferRepository())
                 {
                     Surname = (string)reader["Surname"],
                     Name = (string)reader["Name"],

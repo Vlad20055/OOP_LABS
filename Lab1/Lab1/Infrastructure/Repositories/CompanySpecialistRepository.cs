@@ -372,5 +372,23 @@ namespace Lab1.Infrastructure.Repositories
 
             await command.ExecuteNonQueryAsync(cancellationToken);
         }
+        public async Task DecompleteSalaryProjectAsync(SalaryProject salaryProject, CancellationToken cancellationToken)
+        {
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            const string SQLquery = """
+        UPDATE salary_projects
+        SET IsCompleted = false
+        WHERE IdNumber = @IdNumber
+        """;
+
+            await using var command = new NpgsqlCommand(SQLquery, connection);
+            command.Parameters.AddWithValue("@IdNumber", salaryProject.IdNumber);
+
+            await command.ExecuteNonQueryAsync(cancellationToken);
+        }
+
+
     }
 }

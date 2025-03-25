@@ -9,7 +9,7 @@ using Lab1.Infrastructure.Repositories;
 Console.WriteLine("Hello, World!");
 
 
-ClientService clientService = new ClientService(new ClientRepository());
+ClientService clientService = new ClientService(new ClientRepository(), new TransferRepository());
 ManagerService managerService = new ManagerService(new ManagerRepository());
 BankService bankService = new BankService(new BankRepository());
 CompanyService companyService = new CompanyService(new CompanyRepository());
@@ -76,6 +76,8 @@ specialistAnton.ApproveSalaryProjectRequest(clientAndrey);
 //await managerEkaterina.ApproveCredit(clientVladislav.Credits[0]);
 //await managerEkaterina.ApproveInstallment(clientVladislav.Installments[0]);
 //await managerEkaterina.ApproveDeposit(clientVladislav.Deposits[0]);
+//clientAndrey.Transfer(clientAndrey.Accounts[0], clientVladislav.Accounts[0], 50);
+//clientVladislav.Transfer(clientVladislav.Accounts[0], clientAndrey.Accounts[0], 50);
 
 Console.WriteLine("\nClient VLADISLAV\n");
 Console.WriteLine("Accounts:");
