@@ -39,6 +39,18 @@ create table banks
 );
 
 
+create table companies
+(
+	Id Serial not null,
+	CompanyType int not null,
+	Name text not null,
+	PayerAccountNumber int not null,
+	BankIdentificationCode int not null,
+	Address text not null,
+	SalaryProjectId int
+);
+
+
 create table client_account_records
 (
 	Login text not null,
@@ -105,6 +117,17 @@ create table client_deposit_records
 );
 
 
+create table salary_project_request
+(
+	IdNumber Serial not null,
+	Login text not null,
+	CompanyName text not null,
+	AccountId int not null,
+	Salary decimal not null,
+	IsApproved boolean not null
+);
+
+
 create table salary_projects
 (
 	IdNumber Serial not null,
@@ -114,17 +137,55 @@ create table salary_projects
 );
 
 
+create table salaries
+(
+	SalaryProjectId int not null,
+	Salary decimal not null,
+	AccountId int not null
+);
+
+
+create table company_specialists
+(
+	id Serial not null,
+	IdNumber text not null,
+	Name text not null,
+	Login text not null,
+	Password text not null,
+	CompanyName text not null
+);
+
+
+create table transferes
+(
+	IdNumber Serial not null,
+	SenderAccountId int not null,
+	RecipienAccountId int not null,
+	Amount decimal not null,
+	IsCancelled boolean not null
+);
+
+
+create table operators
+(
+	id Serial not null,
+	IdNumber text not null,
+	Name text not null,
+	Login text not null,
+	Password text not null
+);
 
 
 
 
 
-// DANGER ZONE //
+
 
 drop table clients;
 drop table managers;
 drop table accounts;
 drop table banks;
+drop table companies;
 drop table client_account_records;
 drop table account_bank_records;
 drop table credits;
@@ -133,4 +194,17 @@ drop table installments;
 drop table client_installment_records;
 drop table deposits;
 drop table client_deposit_records;
+drop table salary_project_request;
 drop table salary_projects;
+drop table salaries;
+drop table company_specialists;
+drop table transferes;
+drop table operators;
+
+
+
+
+
+
+
+

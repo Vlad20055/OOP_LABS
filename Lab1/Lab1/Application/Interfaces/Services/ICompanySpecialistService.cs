@@ -4,9 +4,6 @@ namespace Lab1.Application.Interfaces.Services
 {
     internal interface ICompanySpecialistService
     {
-        //public CompanySpecialist AddCompanySpecialist()
-        //{
-
-        //}
+        
     }
 }

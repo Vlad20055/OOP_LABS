@@ -14,6 +14,7 @@ ManagerService managerService = new ManagerService(new ManagerRepository());
 BankService bankService = new BankService(new BankRepository());
 CompanyService companyService = new CompanyService(new CompanyRepository());
 CompanySpecialistService companySpecialistService = new CompanySpecialistService(new CompanySpecialistRepository());
+OperatorService operatorService = new OperatorService(new OperatorRepository(), new TransferRepository());
 
 
 Client clientVladislav = clientService.Register(
@@ -40,6 +41,18 @@ Client clientAndrey = clientService.Register(
     "1234"
     ) ?? throw new Exception();
 
+Client clientIlya = clientService.Register(
+    "Korenik",
+    "Ilya",
+    "Andreevich",
+    "Passport",
+    "ID3",
+    "@Karenikkk",
+    "KaranikIlya@mail.ru",
+    "Ilya2006",
+    "1234"
+    );
+
 Manager managerEkaterina = managerService.AddManager(
     "ID1",
     "Ekaterina",
@@ -58,48 +71,63 @@ Company Microsoft = companyService.Register(
     Belarusbank
     );
 
-CompanySpecialist specialistAnton = companySpecialistService.AddCompanySpecialist("Anton2006", "1234", "ID1", "Anton", Microsoft);
-//specialistAnton.AddSalaryProject();
-specialistAnton.ApproveSalaryProjectRequest(clientVladislav);
-specialistAnton.ApproveSalaryProjectRequest(clientAndrey);
+CompanySpecialist specialistAnton = companySpecialistService.AddCompanySpecialist(
+    "Anton2006",
+    "1234",
+    "ID1",
+    "Anton",
+    Microsoft
+    );
 
+Operator operatorDarya = operatorService.AddOperator(
+    "Dasha2006",
+    "1234",
+    "ID1",
+    "Darya"
+    );
+
+//specialistAnton.AddSalaryProject();
 //await managerEkaterina.ApproveClient(clientVladislav);
 //await managerEkaterina.ApproveClient(clientAndrey);
+//await managerEkaterina.ApproveClient(clientIlya);
 //clientVladislav.AddAccount(Belarusbank);
 //clientAndrey.AddAccount(Belarusbank);
+//clientIlya.AddAccount(Belarusbank);
 //clientVladislav.AddCredit(Belarusbank, Period.Month_3, 2, 100);
 //clientVladislav.AddInstallment(Belarusbank, Period.Month_24, 1.5m, 300);
 //clientVladislav.AddDeposit(Belarusbank, Period.Month_12, 2.5m, 1000);
 //clientVladislav.AddSalaryProjectRequest(Microsoft, 1000, clientVladislav.Accounts[0]);
 //clientAndrey.AddSalaryProjectRequest(Microsoft, 1000, clientAndrey.Accounts[0]);
-//clientVladislav = clientService.ReadClient("Vlad20055") ?? throw new Exception("No such Client");
+//clientIlya.AddSalaryProjectRequest(Microsoft, 1000, clientIlya.Accounts[0]);
 //await managerEkaterina.ApproveCredit(clientVladislav.Credits[0]);
 //await managerEkaterina.ApproveInstallment(clientVladislav.Installments[0]);
 //await managerEkaterina.ApproveDeposit(clientVladislav.Deposits[0]);
 //clientAndrey.Transfer(clientAndrey.Accounts[0], clientVladislav.Accounts[0], 50);
 //clientVladislav.Transfer(clientVladislav.Accounts[0], clientAndrey.Accounts[0], 50);
+//specialistAnton.ApproveSalaryProjectRequest(clientVladislav);
+//specialistAnton.ApproveSalaryProjectRequest(clientAndrey);
+//specialistAnton.ApproveSalaryProjectRequest(clientIlya);
+//specialistAnton.DecompleteSalaryProject();
+//operatorDarya.RealizeSalaryProject(Microsoft);
 
-Console.WriteLine("\nClient VLADISLAV\n");
+Console.WriteLine("\nClient VLADISLAV");
 Console.WriteLine("Accounts:");
 foreach (var acc in clientVladislav.Accounts)
 {
     Console.WriteLine(acc.ToString());
 }
-Console.WriteLine();
 
 Console.WriteLine("Credits:");
 foreach (var cred in clientVladislav.Credits)
 {
     Console.WriteLine(cred.ToString());
 }
-Console.WriteLine();
 
 Console.WriteLine("Installments:");
 foreach (var inst in clientVladislav.Installments)
 {
     Console.WriteLine(inst.ToString());
 }
-Console.WriteLine();
 
 Console.WriteLine("Deposits:");
 foreach (var dep in clientVladislav.Deposits)
@@ -107,28 +135,26 @@ foreach (var dep in clientVladislav.Deposits)
     Console.WriteLine(dep.ToString());
 }
 
+/* */
 
-Console.WriteLine("\nClient ANDREY\n");
+Console.WriteLine("\nClient ANDREY");
 Console.WriteLine("Accounts:");
 foreach (var acc in clientAndrey.Accounts)
 {
     Console.WriteLine(acc.ToString());
 }
-Console.WriteLine();
 
 Console.WriteLine("Credits:");
 foreach (var cred in clientAndrey.Credits)
 {
     Console.WriteLine(cred.ToString());
 }
-Console.WriteLine();
 
 Console.WriteLine("Installments:");
 foreach (var inst in clientAndrey.Installments)
 {
     Console.WriteLine(inst.ToString());
 }
-Console.WriteLine();
 
 Console.WriteLine("Deposits:");
 foreach (var dep in clientAndrey.Deposits)
@@ -136,19 +162,52 @@ foreach (var dep in clientAndrey.Deposits)
     Console.WriteLine(dep.ToString());
 }
 
+/* */
 
-Console.WriteLine("\n\n\nCOMPANY\n\n\n");
+Console.WriteLine("\nClient ILYA");
+Console.WriteLine("Accounts:");
+foreach (var acc in clientIlya.Accounts)
+{
+    Console.WriteLine(acc.ToString());
+}
+
+Console.WriteLine("Credits:");
+foreach (var cred in clientIlya.Credits)
+{
+    Console.WriteLine(cred.ToString());
+}
+
+Console.WriteLine("Installments:");
+foreach (var inst in clientIlya.Installments)
+{
+    Console.WriteLine(inst.ToString());
+}
+
+Console.WriteLine("Deposits:");
+foreach (var dep in clientIlya.Deposits)
+{
+    Console.WriteLine(dep.ToString());
+}
+
+/* */
+
+Console.WriteLine("\n\nCOMPANY");
 Console.WriteLine(Microsoft.ToString());
 
+/* */
 
-Console.WriteLine("\n\n\nCOMPANY SPECIALIST\n\n\n");
+Console.WriteLine("\n\nCOMPANY SPECIALIST");
 Console.WriteLine(specialistAnton.ToString());
+
+/* */
+
+Console.WriteLine("\n\nOPERATOR");
+Console.WriteLine(operatorDarya.ToString());
 
 //clientVladislav.DeleteAccount(clientVladislav.Accounts[0]);
 //clientVladislav.DeleteCredit(clientVladislav.Credits[0]);
 //clientVladislav.DeleteInstallment(clientVladislav.Installments[0]);
 //clientVladislav.DeleteDeposit(clientVladislav.Deposits[0]);
-
 //bankService.Unregister(Belarusbank); // Doesn't work correctly!
 //companyService.Unregister(Microsoft);
 //managerService.DeleteManager(managerEkaterina);
