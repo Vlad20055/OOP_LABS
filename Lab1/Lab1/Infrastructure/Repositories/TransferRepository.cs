@@ -108,6 +108,45 @@ namespace Lab1.Infrastructure.Repositories
 
             return transfers;
         }
+        public async Task<List<Transfer>> ReadAllTransfersAsync(CancellationToken cancellationToken)
+        {
+            var transfers = new List<Transfer>();
+
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            const string SQLquery = """
+        SELECT IdNumber, SenderAccountId, RecipienAccountId, Amount, IsCancelled
+        FROM transferes
+        """;
+
+            await using var command = new NpgsqlCommand(SQLquery, connection);
+
+            await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                var senderAccountId = reader.GetInt32(reader.GetOrdinal("SenderAccountId"));
+                var recipientAccountId = reader.GetInt32(reader.GetOrdinal("RecipienAccountId"));
+
+                var senderAccount = await ReadAccountAsync(senderAccountId, cancellationToken);
+                var recipientAccount = await ReadAccountAsync(recipientAccountId, cancellationToken);
+
+                if (senderAccount != null && recipientAccount != null)
+                {
+                    transfers.Add(new Transfer
+                    {
+                        IdNumber = reader.GetInt32(reader.GetOrdinal("IdNumber")),
+                        Amount = reader.GetDecimal(reader.GetOrdinal("Amount")),
+                        IsCancelled = reader.GetBoolean(reader.GetOrdinal("IsCancelled")),
+                        SenderAccount = senderAccount,
+                        RecipienAccount = recipientAccount
+                    });
+                }
+            }
+
+            return transfers;
+        }
         public async Task UpdateAccountAmountAsync(Account account, CancellationToken cancellationToken)
         {
             await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
@@ -122,6 +161,22 @@ namespace Lab1.Infrastructure.Repositories
             await using var command = new NpgsqlCommand(SQLquery, connection);
             command.Parameters.AddWithValue("@Amount", account.Amount);
             command.Parameters.AddWithValue("@IdNumber", account.IdNumber);
+
+            await command.ExecuteNonQueryAsync(cancellationToken);
+        }
+        public async Task CancelTransferAsync(int idNumber, CancellationToken cancellationToken)
+        {
+            await using var connection = new NpgsqlConnection(DatabaseOptions.ConnectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            const string SQLquery = """
+        UPDATE transferes
+        SET IsCancelled = true
+        WHERE IdNumber = @IdNumber
+        """;
+
+            await using var command = new NpgsqlCommand(SQLquery, connection);
+            command.Parameters.AddWithValue("@IdNumber", idNumber);
 
             await command.ExecuteNonQueryAsync(cancellationToken);
         }

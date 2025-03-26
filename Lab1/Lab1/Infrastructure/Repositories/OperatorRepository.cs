@@ -54,7 +54,8 @@ namespace Lab1.Infrastructure.Repositories
                     IdNumber = reader.GetString(reader.GetOrdinal("IdNumber")),
                     Name = reader.GetString(reader.GetOrdinal("Name")),
                     Login = reader.GetString(reader.GetOrdinal("Login")),
-                    Password = reader.GetString(reader.GetOrdinal("Password"))
+                    Password = reader.GetString(reader.GetOrdinal("Password")),
+                    Role = UserRole.Operator
                 };
             }
 

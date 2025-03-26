@@ -57,7 +57,8 @@ namespace Lab1.Infrastructure.Repositories
                     Name = reader.GetString(reader.GetOrdinal("Name")),
                     Login = reader.GetString(reader.GetOrdinal("Login")),
                     Password = reader.GetString(reader.GetOrdinal("Password")),
-                    Company = await ReadCompanyAsync(reader.GetString(reader.GetOrdinal("CompanyName")), cancellationToken) ?? throw new ArgumentNullException("No Company for CompanySpecialist")
+                    Company = await ReadCompanyAsync(reader.GetString(reader.GetOrdinal("CompanyName")), cancellationToken) ?? throw new ArgumentNullException("No Company for CompanySpecialist"),
+                    Role = UserRole.CompanySpecialist
                 };
 
                 return companySpecialist;

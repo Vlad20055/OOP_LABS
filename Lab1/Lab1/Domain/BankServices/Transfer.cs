@@ -9,5 +9,14 @@ namespace Lab1.Domain.BankServices
         public required Account RecipienAccount { get; set; }
         public required decimal Amount { get; set; }
         public bool IsCancelled { get; set; } = false;
+
+        public override string ToString()
+        {
+            return $"Transfer [ID: {IdNumber}, " +
+                   $"From: {SenderAccount.IdNumber}, " +
+                   $"To: {RecipienAccount.IdNumber}, " +
+                   $"Amount: {Amount:C}, " +
+                   $"  Status: {(IsCancelled ? "❌ Cancelled" : "✅ Completed")}";
+        }
     }
 }

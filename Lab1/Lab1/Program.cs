@@ -15,6 +15,7 @@ BankService bankService = new BankService(new BankRepository());
 CompanyService companyService = new CompanyService(new CompanyRepository());
 CompanySpecialistService companySpecialistService = new CompanySpecialistService(new CompanySpecialistRepository());
 OperatorService operatorService = new OperatorService(new OperatorRepository(), new TransferRepository());
+AdministratorService administratorService = new AdministratorService(new AdministratorRepository());
 
 
 Client clientVladislav = clientService.Register(
@@ -86,6 +87,13 @@ Operator operatorDarya = operatorService.AddOperator(
     "Darya"
     );
 
+Administrator administratorAnastasia = administratorService.AddAdministrator(
+    "Nastya2006",
+    "1234",
+    "ID1",
+    "Anastasia"
+    );
+
 //specialistAnton.AddSalaryProject();
 //await managerEkaterina.ApproveClient(clientVladislav);
 //await managerEkaterina.ApproveClient(clientAndrey);
@@ -109,6 +117,20 @@ Operator operatorDarya = operatorService.AddOperator(
 //specialistAnton.ApproveSalaryProjectRequest(clientIlya);
 //specialistAnton.DecompleteSalaryProject();
 //operatorDarya.RealizeSalaryProject(Microsoft);
+List<Transfer> transferList = administratorAnastasia.GetAllTransfers();
+//administratorAnastasia.CancelTransfer(transferList[0]);
+
+Console.WriteLine("\nTRANSFERS:");
+foreach (var transfer in transferList)
+{
+    Console.WriteLine(transfer.ToString());
+}
+
+Console.WriteLine("\nMicrosoft:");
+foreach (var transfer in administratorAnastasia.GetTransfers(Microsoft.Account))
+{
+    Console.WriteLine(transfer.ToString());
+}
 
 Console.WriteLine("\nClient VLADISLAV");
 Console.WriteLine("Accounts:");
@@ -203,6 +225,13 @@ Console.WriteLine(specialistAnton.ToString());
 
 Console.WriteLine("\n\nOPERATOR");
 Console.WriteLine(operatorDarya.ToString());
+
+/* */
+
+Console.WriteLine("\n\nADMINISTRATOR");
+Console.WriteLine(administratorAnastasia.ToString());
+
+
 
 //clientVladislav.DeleteAccount(clientVladislav.Accounts[0]);
 //clientVladislav.DeleteCredit(clientVladislav.Credits[0]);

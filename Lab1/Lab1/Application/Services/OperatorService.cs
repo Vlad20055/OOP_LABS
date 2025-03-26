@@ -30,7 +30,8 @@ namespace Lab1.Application.Services
                 Login = login,
                 Password = password,
                 IdNumber = idNumber,
-                Name = name
+                Name = name,
+                Role = UserRole.Operator,
             };
 
             operatorRepository.CreateAsync(@operator, CancellationToken.None).Wait();
