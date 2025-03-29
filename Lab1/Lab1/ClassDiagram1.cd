@@ -1,0 +1,330 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Lab1.Domain.Users.Administrator" Collapsed="true">
+    <Position X="3.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAACAEAQAAAAAAAAAAAAAAABQAAA=</HashCode>
+      <FileName>Domain\Users\Administrator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab1.Domain.Users.Client" Collapsed="true">
+    <Position X="2" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAGAAACYAUAQAAAAAQQQABAAgAACCAAAGCUBBAAg=</HashCode>
+      <FileName>Domain\Users\Client.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Accounts" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Lab1.Domain.Users.CompanySpecialist" Collapsed="true">
+    <Position X="0.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAIEBAAAAAQAAAAAAAAAAAAABABAAAA=</HashCode>
+      <FileName>Domain\Users\CompanySpecialist.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Company" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Lab1.Domain.Users.Manager" Collapsed="true">
+    <Position X="6.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAABAAAAAAAAAAABAAAAAQAAAAAAAAACAAAAABAAAA=</HashCode>
+      <FileName>Domain\Users\Manager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab1.Domain.Users.Operator" Collapsed="true">
+    <Position X="5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAQAAQAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Domain\Users\Operator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab1.Domain.Users.User" Collapsed="true">
+    <Position X="0.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAACAAAQAAAAAAA=</HashCode>
+      <FileName>Domain\Users\User.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Role" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Lab1.Application.Services.AdministratorService" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Application\Services\AdministratorService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Application.Services.BankService" Collapsed="true">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Application\Services\BankService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Application.Services.ClientService" Collapsed="true">
+    <Position X="2" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABEAAAAAABAAAAAAA=</HashCode>
+      <FileName>Application\Services\ClientService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Application.Services.CompanyService" Collapsed="true">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Application\Services\CompanyService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Application.Services.CompanySpecialistService" Collapsed="true">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Application\Services\CompanySpecialistService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Application.Services.ManagerService" Collapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Application\Services\ManagerService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Application.Services.OperatorService" Collapsed="true">
+    <Position X="5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Application\Services\OperatorService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Domain.Account" Collapsed="true">
+    <Position X="2" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAEEAAAAACAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Domain\Account.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Bank" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Lab1.Domain.Bank" Collapsed="true">
+    <Position X="2" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Bank.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab1.Domain.Company" Collapsed="true">
+    <Position X="0.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAEAAAAAAQAAAAAAAACAAAAAAAAAMA=</HashCode>
+      <FileName>Domain\Company.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CompanyType" />
+      <Property Name="Account" />
+      <Property Name="SalaryProject" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Lab1.Domain.BankServices.BankAbility" Collapsed="true">
+    <Position X="7.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAACAAAAAAAACAQAAAABIAAI=</HashCode>
+      <FileName>Domain\BankServices\BankAbility.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Type" />
+      <Property Name="Period" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Lab1.Domain.BankServices.Credit" Collapsed="true">
+    <Position X="6" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\BankServices\Credit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab1.Domain.BankServices.Deposit" Collapsed="true">
+    <Position X="7.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\BankServices\Deposit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab1.Domain.BankServices.Installment" Collapsed="true">
+    <Position X="9" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\BankServices\Installment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab1.Domain.BankServices.SalaryProject" Collapsed="true">
+    <Position X="4" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAACAAEAAAAAAAAAAAAABAAACAAAABAAAA=</HashCode>
+      <FileName>Domain\BankServices\SalaryProject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab1.Domain.BankServices.SalaryProjectRequest" Collapsed="true">
+    <Position X="4" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQCAAAAAAAAAAAAAAAAAAAAAAAAACAAAQAABAAEA=</HashCode>
+      <FileName>Domain\BankServices\SalaryProjectRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab1.Domain.BankServices.Transfer" Collapsed="true">
+    <Position X="11" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAEAAAAAACAAAAAABAAAAAAIABAAAA=</HashCode>
+      <FileName>Domain\BankServices\Transfer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab1.Infrastructure.Repositories.AdministratorRepository" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAIA=</HashCode>
+      <FileName>Infrastructure\Repositories\AdministratorRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Infrastructure.Repositories.BankRepository" Collapsed="true">
+    <Position X="10" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAIA=</HashCode>
+      <FileName>Infrastructure\Repositories\BankRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Infrastructure.Repositories.ClientRepository" Collapsed="true">
+    <Position X="2" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAkAAABAgAAAABAQAIAAQAAgBAEAEAAAABAAIAAAYE=</HashCode>
+      <FileName>Infrastructure\Repositories\ClientRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Infrastructure.Repositories.CompanyRepository" Collapsed="true">
+    <Position X="8.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAQAABAQAQAAAAAgCAAAAAAAAAAAIAAAIE=</HashCode>
+      <FileName>Infrastructure\Repositories\CompanyRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Infrastructure.Repositories.CompanySpecialistRepository" Collapsed="true">
+    <Position X="3.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABgAAAIABAUAAAAAAQAAAIAACAAAAIAAAAAAIAAgKA=</HashCode>
+      <FileName>Infrastructure\Repositories\CompanySpecialistRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Infrastructure.Repositories.ManagerRepository" Collapsed="true">
+    <Position X="6.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAQAAAIAAAAAAAAAAAAAEAAAAAAAIAAAIA=</HashCode>
+      <FileName>Infrastructure\Repositories\ManagerRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Infrastructure.Repositories.OperatorRepository" Collapsed="true">
+    <Position X="5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAIA=</HashCode>
+      <FileName>Infrastructure\Repositories\OperatorRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Infrastructure.Repositories.TransferRepository" Collapsed="true">
+    <Position X="11.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAACAACAAAAAAAAAACIAAAIA=</HashCode>
+      <FileName>Infrastructure\Repositories\TransferRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Presentation.Action">
+    <Position X="4.75" Y="12.5" Width="1.5" />
+    <NestedTypes>
+      <Delegate Name="Lab1.Presentation.Action.ActionHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Presentation\Action.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAQQQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Presentation\Action.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Presentation.Application" Collapsed="true">
+    <Position X="0.75" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAAAAAAAAACAAAAgABAAAAAAAAAAAI=</HashCode>
+      <FileName>Presentation\Application.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab1.Presentation.LoginMenu">
+    <Position X="0.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQQQAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Presentation\LoginMenu.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab1.Presentation.Menu">
+    <Position X="2.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAgEAAAAAAAAAAAQQQAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Presentation\Menu.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Lab1.Presentation.IUiInstance" Collapsed="true">
+    <Position X="0.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQQQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Presentation\IUiInstance.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Lab1.Domain.Users.UserRole" Collapsed="true">
+    <Position X="2.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAACAAAAAAAAAAEABAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Domain\Users\User.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Lab1.Domain.CompanyType" Collapsed="true">
+    <Position X="0.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAAAgAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Company.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Lab1.Domain.BankServices.AbilityType" Collapsed="true">
+    <Position X="7.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Domain\BankServices\BankAbility.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Lab1.Domain.BankServices.Period" Collapsed="true">
+    <Position X="9.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAIAQAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Domain\BankServices\BankAbility.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

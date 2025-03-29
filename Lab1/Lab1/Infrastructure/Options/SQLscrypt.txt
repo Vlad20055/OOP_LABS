@@ -176,6 +176,16 @@ create table operators
 );
 
 
+create table administrators
+(
+	id Serial not null,
+	IdNumber text not null,
+	Name text not null,
+	Login text not null,
+	Password text not null
+);
+
+
 
 
 
