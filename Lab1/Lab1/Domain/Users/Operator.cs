@@ -1,6 +1,4 @@
-﻿
-
-using Lab1.Domain.BankServices;
+﻿using Lab1.Domain.BankServices;
 using Lab1.Domain.Repositories;
 
 namespace Lab1.Domain.Users
@@ -15,6 +13,12 @@ namespace Lab1.Domain.Users
             if (company.SalaryProject == null)
             {
                 Console.WriteLine($"\nERROR!\nCompany {company.Name} has no salary project\n");
+                return;
+            }
+
+            if (company.SalaryProject.IsCompleted == true)
+            {
+                Console.WriteLine("Salary project already completed!");
                 return;
             }
 

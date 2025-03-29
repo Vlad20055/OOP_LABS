@@ -248,5 +248,26 @@ namespace Lab1.Domain.Users
             transferRepository.UpdateAccountAmountAsync(recipientAccount, cancellationToken);
             transferRepository.CreateAsync(transfer, cancellationToken).Wait();
         }
+
+        public Account GetAccount(int accountId)
+        {
+            var readingTask = transferRepository.ReadAccountAsync(accountId, CancellationToken.None);
+            readingTask.Wait();
+            var acc = readingTask.Result;
+            if (acc != null)
+            {
+                return acc;
+            }
+            else
+            {
+                throw new Exception("No Account");
+            }
+        }
+        public List<Account> GetAllAccounts()
+        {
+            var readingTask = clientRepository.ReadAccountsByClientAsync(this.Login, CancellationToken.None);
+            readingTask.Wait();
+            return readingTask.Result;
+        }
     }
 }
